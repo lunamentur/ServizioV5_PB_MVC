@@ -1,6 +1,7 @@
 package main.java.model.library;
 
 import database.Database;
+import main.java.view.ViewLibraryGeneral;
 import prestito.Prestito;
 import resource.*;
 import view.View;
@@ -57,11 +58,11 @@ public class LibraryResources {
 	 */
 	public static void createResourceProcess(){
 		stampaRichiestaSingola(CATEGORIA);
-		choice = LibraryGeneral.readIntChoise(1,2);
+		choice = ViewLibraryGeneral.readIntChoise(1,2);
 		//vero se e\' un libro, oppure un film
 		if (choice == 1) string = BOOK;
 		else string = FILM;
-		barcode=LibraryGeneral.insertBarcode(vincolo);
+		barcode= ViewLibraryGeneral.insertBarcode(vincolo);
 		if(!checkIfExist(barcode)){
 			res= createResource(barcode, string);
 			switch(choice)
@@ -70,7 +71,7 @@ public class LibraryResources {
 				 * Creazione di una risorsa di tipo Book.
 				 */
 				case 1:
-					book = new Book(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, LibraryGeneral.insertNum(NUM_PAG), LibraryGeneral.insertString(CASA_EDIT));
+					book = new Book(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(NUM_PAG), ViewLibraryGeneral.insertString(CASA_EDIT));
 					Database.insertResource(book);
 					stampaRichiestaSingola(MG_AZIONE_SUCCESSO);
 					break;
@@ -78,7 +79,7 @@ public class LibraryResources {
 				 * Creazione di una risorsa di tipo Film.
 				 */
 				case 2:
-					film = new Film(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, LibraryGeneral.insertNum(AGE_RESTRIC), LibraryGeneral.insertNum(DURATA));
+					film = new Film(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(AGE_RESTRIC), ViewLibraryGeneral.insertNum(DURATA));
 					Database.insertResource(film);
 					stampaRichiestaSingola(MG_AZIONE_SUCCESSO);
 					break;
@@ -100,10 +101,10 @@ public class LibraryResources {
 	 * @return oggetto di tipo Resource.
 	 */
 	public static Resource createResource(int barcode, String type){
-		String title = LibraryGeneral.insertString(TITLE);
-		List ll = LibraryGeneral.insertList(AUTORI);
-		List lingue = LibraryGeneral.insertList(LINGUE);
-		Resource res = new Resource(barcode, type, title, ll, lingue, LibraryGeneral.insertNumberEqual(YEAR, 4), LibraryGeneral.insertString(GENERE), licenseList);
+		String title = ViewLibraryGeneral.insertString(TITLE);
+		List ll = ViewLibraryGeneral.insertList(AUTORI);
+		List lingue = ViewLibraryGeneral.insertList(LINGUE);
+		Resource res = new Resource(barcode, type, title, ll, lingue, ViewLibraryGeneral.insertNumberEqual(YEAR, 4), ViewLibraryGeneral.insertString(GENERE), licenseList);
 		return res;
 	}
 
@@ -263,7 +264,7 @@ public class LibraryResources {
 		while(!end){
 			stampaRichiestaSingola(CODICE_PRESTITO);
 			try {
-				string= LibraryGeneral.readString();
+				string= ViewLibraryGeneral.readString();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

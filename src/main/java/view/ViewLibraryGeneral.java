@@ -1,6 +1,4 @@
-package main.java.model.library;
-
-import view.View;
+package main.java.view;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,7 +12,7 @@ import java.util.Scanner;
  * @author Reda Kassame, Simona Ramazzotti
  * @version 5
  */
-public class LibraryGeneral {
+public class ViewLibraryGeneral {
 
     /**
      * Variabili interne utilizzate dalla classe.

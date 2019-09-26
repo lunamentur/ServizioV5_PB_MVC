@@ -1,7 +1,5 @@
 package main.java.view;
 
-import main.java.model.library.LibraryGeneral;
-
 /**
  * Classe View col compito di generare il menu' iniziale con cui si interfaccera' l'utente finale e
  * altri metodi simili .toString() al fine di visualizzare a video messaggi di errore, domande, simboli e altro.
@@ -134,7 +132,7 @@ public class View {
     /**
      * Metodo per l'acquisizione e visualizzazione della ricerca risorse all'interno del Database.
      */
-    public void viewResearchResource(String msg) {
+    public void viewResearchResource() {
             stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
             stampaMenuSpecifico(RICHIESTE_MENU_RICERCA);
             stampaRichiestaSingola(RICERCA);
@@ -143,12 +141,44 @@ public class View {
     /**
      * Metodo per l'acquisizione e visualizzazione
      */
+    public void viewActionAdmin(){
+        stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
+        stampaMenuSpecifico(RICHIESTE_MENU_ADMIN);
+    }
 
+    public void viewActionUser(){
+        stampaRichiestaSingola(View.MG_ANCORA + View.PREMI_INDIETRO);
+        stampaMenuSpecifico(View.RICHIESTE_MENU_USER);
+    }
 
+    public void viewMain(){
+        int count=0;
+        if(count>0){
+            stampaMenuSpecifico(View.MENU_INIZIALE);
+            count++;
+        }
+        else
+        {
+            stampaRichiestaSingola(MG_ANCORA + PREMI_USCIRE);
+            stampaMenuSpecifico(View.MENU_INIZIALE);
+        }
+    }
+
+    public void viewPannelUser(){
+        stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
+        stampaMenuSpecifico(View.RICHIESTE_MENU_INIZIALE);
+    }
+
+    public void viewRenewalRegistrazion(){
+        view.stampaRichiestaSingola(View.MG_SCADUTA_ISCRIZIONE);
+        view.stampaRichiestaSingola(View.RINNOVO);
+    }
 
     /**
-     * Metodo per l'acquisizione e visualizzazione
+     * Metodo visualizzazione messaggio d'errore
      */
-
+    public void viewMsgError(){
+        stampaRichiestaSingola(MG_ERRORE);
+    }
 
 }
