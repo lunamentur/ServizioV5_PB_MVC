@@ -147,7 +147,7 @@ public class View {
     }
 
     public void viewActionUser(){
-        stampaRichiestaSingola(View.MG_ANCORA + View.PREMI_INDIETRO);
+        stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
         stampaMenuSpecifico(View.RICHIESTE_MENU_USER);
     }
 
@@ -166,12 +166,12 @@ public class View {
 
     public void viewPannelUser(){
         stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
-        stampaMenuSpecifico(View.RICHIESTE_MENU_INIZIALE);
+        stampaMenuSpecifico(RICHIESTE_MENU_INIZIALE);
     }
 
     public void viewRenewalRegistrazion(){
-        view.stampaRichiestaSingola(View.MG_SCADUTA_ISCRIZIONE);
-        view.stampaRichiestaSingola(View.RINNOVO);
+        stampaRichiestaSingola(MG_SCADUTA_ISCRIZIONE);
+        stampaRichiestaSingola(RINNOVO);
     }
 
     /**

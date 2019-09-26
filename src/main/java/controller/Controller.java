@@ -33,6 +33,9 @@ public class Controller {
         username= new String();
     }
 
+    /**
+     * Inizializzati i dati precompilati e avvio del menu iniziale del programma.
+     */
     public void init(){
         /**
          * Inizializzazione di oggetti predefiniti.
@@ -50,51 +53,60 @@ public class Controller {
         //fine del menu e del programma
         System.out.println(Constant.FINE_MENU);
     }
+
+
+    //serve? davvero?
     public void login(){
         //inserire il nome e la pass
         //controllo autenticazione
         //rinvio a menù User opure menu action Admin
 
-        //nota bene: tutto nella LibraryOperator
+        //nota bene: tutto nella LibraryOperat e ControllerOp
 
     }
+
+
+    /**
+     * Menu d'apertura del programma
+     */
     public void menuStandard(){
         end1 = false;
         do {
             view.viewMain();
+            int choice = ViewLibraryGeneral.readInt();
+
             /**
              * Accesso al pannello admin
              */
-            case 1:
-                /////////////////////////////////////////////////////////////////////////////////////////////
+            switch (choice) {
+                case 1:
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+                    /**
+                     * L'utente inserisce il proprio nickname e viene cercato all'interno del database.
+                     * Se la password &egrave; la stessa allora viene autenticato con successo, altrimenti
+                     * continua a ciclare oppure si termina il programma.
+                     */
+                    username = ControllerOperators.checkLogin();
+                    Admin admin = Database.getAdmin(username);
+                    if (!username.equals("_error_")) {
+                        System.out.println("Benvenuto " + admin.getUsername());
+                        menuActionAdmin(admin);
+                    } else {
+                        System.out.println(View.ERRORE_LOGIN);
+                    }
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+                    break;
+
                 /**
-                 * L'utente inserisce il proprio nickname e viene cercato all'interno del database.
-                 * Se la password &egrave; la stessa allora viene autenticato con successo, altrimenti
-                 * continua a ciclare oppure si termina il programma.
+                 * Accesso al pannello utente
                  */
-                //utilizzare login controller
-                username = ControllerOperators.checkLogin();
-                Admin admin = Database.getAdmin(username);
-                if (!username.equals("_error_")) {
-                    System.out.println("Benvenuto " + admin.getUsername());
-                    menuActionAdmin(admin);
-                } else {
-                    System.out.println(View.ERRORE_LOGIN);
-                }
-                /////////////////////////////////////////////////////////////////////////////////////////////
-                break;
-
-            /**
-             * Accesso al pannello utente
-             */
-            case 2:
-                /////////////////////////////////////////////////////////////////////////////////////////////
-                pannelUser();
-                /////////////////////////////////////////////////////////////////////////////////////////////
-                break;
-
+                case 2:
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+                    pannelUser();
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+                    break;
+            }
         }while(!end1);
-    //cosa deve fare?
     }
 
     /**
@@ -356,6 +368,8 @@ public class Controller {
             System.out.println(View.FINE_MENU);
         }
 
+
+        //da mettere nel controller Resource
     public void researchResource(){
         boolean end= false;
         boolean exist= true;

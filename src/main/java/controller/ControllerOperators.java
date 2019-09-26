@@ -57,7 +57,7 @@ public class ControllerOperators {
      * Se si continua a ciclare finche\' non ne viene inserito uno nuovo (inesistente).
      * @return username
      */
-    public String insertUserName(){
+    public static String insertUserName(){
         boolean end=false;
         do{
             username= ViewLibraryGeneral.insertString(Constant.USER_NAME);
@@ -72,7 +72,7 @@ public class ControllerOperators {
      * Metodo che assembla i metodi per la registrazione con i relativi controlli e salva il nuovo user,
      * oggetto di tipo User, all'interno del Database.
      */
-    public boolean registrationProcess(){
+    public static boolean registrationProcess(){
         User user = new User(ViewLibraryGeneral.insertString(Constant.NOME), ViewLibraryGeneral.insertString(Constant.COGNOME), insertUserName(), ViewLibraryGeneral.insertString(Constant.PASSWORD), insertDate(), LocalDate.now(), borrowed);
         if (Database.checkIf18(user.getBirthDate())) {
             Database.insertUser(user);
