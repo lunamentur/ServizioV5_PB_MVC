@@ -132,7 +132,7 @@ public class View {
     /**
      * Metodo per l'acquisizione e visualizzazione della ricerca risorse all'interno del Database.
      */
-    public void viewResearchResource() {
+    public static void viewResearchResource() {
             stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
             stampaMenuSpecifico(RICHIESTE_MENU_RICERCA);
             stampaRichiestaSingola(RICERCA);

@@ -65,7 +65,6 @@ public class Controller {
 
     }
 
-
     /**
      * Menu d'apertura del programma
      */
@@ -134,7 +133,7 @@ public class Controller {
                      * {@link LibraryResources#createResourceProcess()}
                      */
                     case 2:
-                        LibraryResources.createResourceProcess();
+                        ControllerResources.createResourceProcess();
                         break;
                     /**
                      * Rimozione fittizia di una risorsa dall'archivio.
@@ -151,7 +150,7 @@ public class Controller {
                      * {@link #researchResource()}
                      */
                     case 4:
-                        researchResource();
+                        ControllerResources.researchResource();
                         break;
 
                     /**
@@ -249,8 +248,8 @@ public class Controller {
                          * se l'utente non ha nessun prestito attivo allora non puo\' effettuare la ricerca.
                          */
                         if(Database.userHavePrestito(username)){
-                            String id=LibraryResources.checkInsertId(username);
-                            LibraryResources.prorogaPrestito(id);
+                            String id=ControllerResources.checkInsertId(username);
+                            ControllerResources.controllerProrogaPrestito(id);
                         }else System.out.println(Constant.USER_NON_HA_PRESTITI);
                         break;
 
@@ -259,7 +258,7 @@ public class Controller {
                      * {@link #researchResource()}
                      */
                     case 4:
-                        researchResource();
+                        ControllerResources.researchResource();
                         break;
 
                     /**
@@ -271,7 +270,7 @@ public class Controller {
                          * se l'utente non ha nessun prestito attivo allora non puo\' effettuare la ricerca.
                          */
                         if(Database.userHavePrestito(username)){
-                            String id = LibraryResources.checkInsertId(username);
+                            String id = ControllerResources.checkInsertId(username);
                             int temp = Database.getPrestito(id).getBarcode();
                             Database.removePrestito(temp, username, id);
                             System.out.println(Constant.MG_AZIONE_SUCCESSO);
@@ -368,7 +367,5 @@ public class Controller {
             System.out.println(View.FINE_MENU);
         }
 
-
-        //da mettere nel controller Resource
 
 }

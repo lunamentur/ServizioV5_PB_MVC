@@ -4,6 +4,7 @@ import main.java.model.library.LibraryResources;
 import main.java.view.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class ControllerResources {
 
@@ -41,7 +42,7 @@ public class ControllerResources {
      * Altrimenti si continua con la creazione, chiedendo l'inserimento di ogni parametro.
      * Si fa la sistinzione tra oggetto di tipo Book e di tipo Film.
      */
-    public void createResourceProcess(){
+    public static void createResourceProcess(){
         View.stampaRichiestaSingola(Constant.CATEGORIA);
         int choice = ViewLibraryGeneral.readIntChoise(1,2);
         //vero se e\' un libro, oppure un film
@@ -112,7 +113,10 @@ public class ControllerResources {
         } else View.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
     }
 
-    public void researchResource(){
+    /**
+     * Gestione della ricerca di risorse dati in ingresso dei parametri.
+     */
+    public static void researchResource(){
         boolean end= false;
         boolean exist= true;
         do{
@@ -171,6 +175,54 @@ public class ControllerResources {
             if (!exist) //se true diventa false, ovvero se sono uguali significa che non c'e risorsa
                 View.stampaRichiestaSingola(View.NON_ESISTE_RISORSA);
         }while(!end);
+    }
+
+
+    /**
+     * Metodo di controllo dell'inserimento del codice prestito da parte dell'utente.
+     * Si controlla, per avere una sicurezza che l'utente stia accedento solo ed esclusivamente ai prestiti associati al suo account,
+     * che il nome utente (username) compaia all'interno del codice prestito inserito.
+     */
+    public static String checkInsertId(String username){
+        boolean end = false;
+        while(!end){
+            View.stampaRichiestaSingola(Constant.CODICE_PRESTITO);
+            try {
+                string= ViewLibraryGeneral.readString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(Database.checkIfPrestito(string) && string.contains(username)){
+                end=true;
+            } else System.out.println(Constant.NON_ESISTE_PRESTITO);
+        }
+        return string;
+    }
+
+
+    public static void controllerProrogaPrestito(String codePrestito){
+        /**
+         * se vero allora procedi, altrimenti stampa errore.
+         * controllo che il codice prestito esista, sia attivo e che sia possibile effettuare la proroga.
+         */
+        if(LibraryResources.checkProrogaPrestito(codePrestito)){
+            LibraryResources.prorogaPrestito(codePrestito);
+            View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+        } else View.stampaRichiestaSingola(Constant.NO_PROROGA);
+    }
+
+    /**
+     * Metodo per la creazione di una risorsa, oggetto di tipo Resource, generica utilizzando altri metodi di inserimento e controllo.
+     * @param barcode codice identificativo della risorsa.
+     * @param type categoria o tipo della risorsa.
+     * @return oggetto di tipo Resource.
+     */
+    public static Resource createResource(int barcode, String type){
+        String title = ViewLibraryGeneral.insertString(Constant.TITLE);
+        List ll = ViewLibraryGeneral.insertList(Constant.AUTORI);
+        List lingue = ViewLibraryGeneral.insertList(Constant.LINGUE);
+        Resource res = new Resource(barcode, type, title, ll, lingue, ViewLibraryGeneral.insertNumberEqual(Constant.YEAR, 4), ViewLibraryGeneral.insertString(Constant.GENERE), licenseList);
+        return res;
     }
 
 }

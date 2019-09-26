@@ -49,20 +49,6 @@ public class LibraryResources {
 
 
 	/**
-	 * Metodo per la creazione di una risorsa, oggetto di tipo Resource, generica utilizzando altri metodi di inserimento e controllo.
-	 * @param barcode codice identificativo della risorsa.
-	 * @param type categoria o tipo della risorsa.
-	 * @return oggetto di tipo Resource.
-	 */
-	public static Resource createResource(int barcode, String type){
-		String title = ViewLibraryGeneral.insertString(Constant.TITLE);
-		List ll = ViewLibraryGeneral.insertList(Constant.AUTORI);
-		List lingue = ViewLibraryGeneral.insertList(Constant.LINGUE);
-		Resource res = new Resource(barcode, type, title, ll, lingue, ViewLibraryGeneral.insertNumberEqual(Constant.YEAR, 4), ViewLibraryGeneral.insertString(Constant.GENERE), licenseList);
-		return res;
-	}
-
-	/**
 	 * Metodo che permette di verificare se la risorsa &egrave; presente all'interno del database tramite
 	 * un metodo di quella classe.
 	 * {@link #barcode}
@@ -101,16 +87,19 @@ public class LibraryResources {
 	}
 
 	/**
+	 * Controlla che sia valida la proroga e il prestito contemporaneamente.
+	 * @param codePrestito
+	 * @return true se va bene
+	 */
+	public static boolean checkProrogaPrestito(String codePrestito){
+		return (checkIfProroga(codePrestito) && Database.checkIfPrestito(codePrestito));
+	}
+	/**
 	 * Metodo che permette la proroga di un prestito, controllando se presente nell'archivio e successivamente
 	 * se ha i requisiti per essere prorogato. La proroga consta di 30 giorni in piu\' alla data di scadenza prevista.
 	 * {@link #checkIfProroga(String)} and {@link Database#checkIfPrestito(String)} and {@link #incrementNumProroga(String)}
 	 */
 	public static void prorogaPrestito(String codePrestito){
-		/**
-		 * se vero allora procedi, altrimenti stampa errore.
-		 * controllo che il codice prestito esista, sia attivo e che sia possibile effettuare la proroga.
-		 */
-		if(checkIfProroga(codePrestito) && Database.checkIfPrestito(codePrestito)){
 			dataInizio= LocalDate.now();
 			dataScadenza= dataInizio.plusDays(dayMaxBook);
 			/**
@@ -122,8 +111,6 @@ public class LibraryResources {
 			 * Incremento il numero di progoghe richieste dall'user per quella risorsa.
 			 */
 			incrementNumProroga(codePrestito);
-			stampaRichiestaSingola(MG_AZIONE_SUCCESSO);
-		} else stampaRichiestaSingola(NO_PROROGA);
 	}
 
 	/**
@@ -151,7 +138,6 @@ public class LibraryResources {
 	}
 
 
-
 	/**
 	 * Metodo genera il codice del prestito richiesto dall'utente di una risorsa.
 	 * @param barcode {@link #barcode}
@@ -176,27 +162,6 @@ public class LibraryResources {
 		return string;
 	}
 
-	/**
-	 * Metodo di controllo dell'inserimento del codice prestito da parte dell'utente.
-	 * Si controlla, per avere una sicurezza che l'utente stia accedento solo ed esclusivamente ai prestiti associati al suo account,
-	 * che il nome utente (username) compaia all'interno del codice prestito inserito.
-	 * @return codice prestito {@link #generateId(String, int)}
-	 */
-	public static String checkInsertId(String username){
-		boolean end = false;
-		while(!end){
-			stampaRichiestaSingola(CODICE_PRESTITO);
-			try {
-				string= ViewLibraryGeneral.readString();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if(Database.checkIfPrestito(string) && string.contains(username)){
-				end=true;
-			} else System.out.println(NON_ESISTE_PRESTITO);
-		}
-		return string;
-	}
 
 
 }
