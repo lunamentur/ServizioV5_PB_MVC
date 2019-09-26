@@ -1,16 +1,13 @@
 package main.java.model.library;
 
-import database.Database;
+import main.java.model.*;
 import main.java.view.ViewLibraryGeneral;
-import prestito.Prestito;
-import resource.*;
-import view.View;
+
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
-import static view.View.*;
 
 /**
  * Classe intermedia che permette l'interazione tra la classe Resource e la classe Database.
@@ -50,49 +47,6 @@ public class LibraryResources {
 	 * METODI CONTROLLO RESOURCE
 	 */
 
-	/**
-	 * Metodo per creare una risorsa e salvarla nel Database.
-	 * Se la risorsa &egrave; gia\' presente nel database allora si incrementa il numero di copie disponibili al prestito.
-	 * Altrimenti si continua con la creazione, chiedendo l'inserimento di ogni parametro.
-	 * Si fa la sistinzione tra oggetto di tipo Book e di tipo Film.
-	 */
-	public static void createResourceProcess(){
-		stampaRichiestaSingola(CATEGORIA);
-		choice = ViewLibraryGeneral.readIntChoise(1,2);
-		//vero se e\' un libro, oppure un film
-		if (choice == 1) string = BOOK;
-		else string = FILM;
-		barcode= ViewLibraryGeneral.insertBarcode(vincolo);
-		if(!checkIfExist(barcode)){
-			res= createResource(barcode, string);
-			switch(choice)
-			{
-				/**
-				 * Creazione di una risorsa di tipo Book.
-				 */
-				case 1:
-					book = new Book(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(NUM_PAG), ViewLibraryGeneral.insertString(CASA_EDIT));
-					Database.insertResource(book);
-					stampaRichiestaSingola(MG_AZIONE_SUCCESSO);
-					break;
-				/**
-				 * Creazione di una risorsa di tipo Film.
-				 */
-				case 2:
-					film = new Film(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(AGE_RESTRIC), ViewLibraryGeneral.insertNum(DURATA));
-					Database.insertResource(film);
-					stampaRichiestaSingola(MG_AZIONE_SUCCESSO);
-					break;
-
-				/**
-				 * Errore, l'inserimento non &egrave; corretto
-				 */
-				default:
-					System.out.println(MG_ERRORE);
-					break;
-			}
-		} else stampaRichiestaSingola(MG_AZIONE_SUCCESSO);
-	}
 
 	/**
 	 * Metodo per la creazione di una risorsa, oggetto di tipo Resource, generica utilizzando altri metodi di inserimento e controllo.
@@ -101,10 +55,10 @@ public class LibraryResources {
 	 * @return oggetto di tipo Resource.
 	 */
 	public static Resource createResource(int barcode, String type){
-		String title = ViewLibraryGeneral.insertString(TITLE);
-		List ll = ViewLibraryGeneral.insertList(AUTORI);
-		List lingue = ViewLibraryGeneral.insertList(LINGUE);
-		Resource res = new Resource(barcode, type, title, ll, lingue, ViewLibraryGeneral.insertNumberEqual(YEAR, 4), ViewLibraryGeneral.insertString(GENERE), licenseList);
+		String title = ViewLibraryGeneral.insertString(Constant.TITLE);
+		List ll = ViewLibraryGeneral.insertList(Constant.AUTORI);
+		List lingue = ViewLibraryGeneral.insertList(Constant.LINGUE);
+		Resource res = new Resource(barcode, type, title, ll, lingue, ViewLibraryGeneral.insertNumberEqual(Constant.YEAR, 4), ViewLibraryGeneral.insertString(Constant.GENERE), licenseList);
 		return res;
 	}
 
@@ -196,38 +150,7 @@ public class LibraryResources {
 		return copie[copieinPrestito] < copie[copieRisorsa];
 	}
 
-	/**
-	 * Metodo che assembla i metodi per la registrazione del prestito con i relativi controlli e lo salva all'interno del Database.
-	 * Se la risorsa non &egrave; disponibile al prestito poiche\' non ha piu\' copie disponibili allora la registrazione del prestito fallisce.
-	 * @param barcode {@link #barcode}
-	 * @param username {@link operator.User}
-	 * @param codePrestito {@link Prestito}
-	 */
-	public static void createPrestito(String codePrestito, String username, int barcode, int bookOrFilm){
-		/**
-		 * controllo se esiste la risorsa e se &egrave; disponibile al prestito.
-		 */
-		if(Database.checkIfResource(barcode)){
-			if(checkIfResourceFree(barcode)){
-				/**
-				 * Aumento di uno le copie in prestito, ovvero le licenze, in posizione 1 nell'array.
-				 */
-				Database.incrementCopyOrLicenze(barcode, copieinPrestito);
-				/**
-				 * definisco gli attributi per creare un oggetto di tipo Prestito.
-				 */
-				dataInizio = LocalDate.now();
-				dataScadenza = dataInizio.plusDays(dayMaxBook);
-				prestito = new Prestito(codePrestito, username, barcode, dataInizio, dataScadenza);
-				/**
-				 * inserisco l'oggetto di tipo Prestito all'interno dell'archivio dei prestiti nel Database.
-				 */
-				Database.insertPrestito(prestito);
-				Database.incrementLicenzeUser(username, bookOrFilm);
-				View.stampaRichiestaSingola(MG_AZIONE_SUCCESSO);
-			} else View.stampaRichiestaSingola(MG_PRESTITO_NON_DISPONIBILE);
-		} else View.stampaRichiestaSingola(NON_ESISTE_RISORSA);
-	}
+
 
 	/**
 	 * Metodo genera il codice del prestito richiesto dall'utente di una risorsa.

@@ -177,7 +177,7 @@ public class View {
     /**
      * Metodo visualizzazione messaggio d'errore
      */
-    public void viewMsgError(){
+    public static void viewMsgError(){
         stampaRichiestaSingola(MG_ERRORE);
     }
 
