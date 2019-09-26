@@ -1,5 +1,6 @@
 package main.java.controller;
 import main.java.model.*;
+import main.java.model.library.LibraryOperators;
 import main.java.model.library.LibraryResources;
 import main.java.view.ViewLibraryGeneral;
 import main.java.view.*;
@@ -72,7 +73,7 @@ public class Controller {
                  * continua a ciclare oppure si termina il programma.
                  */
                 //utilizzare login controller
-                username = LibraryOperators.checkLogin();
+                username = ControllerOperators.checkLogin();
                 Admin admin = Database.getAdmin(username);
                 if (!username.equals("_error_")) {
                     System.out.println("Benvenuto " + admin.getUsername());
@@ -89,7 +90,6 @@ public class Controller {
             case 2:
                 /////////////////////////////////////////////////////////////////////////////////////////////
                 pannelUser();
-
                 /////////////////////////////////////////////////////////////////////////////////////////////
                 break;
 
@@ -306,7 +306,7 @@ public class Controller {
                          * Sulla data di nascita viene fatto un controllo: se l'utente &egrave; maggiorenne allora pu&ograve; essere inserito nel database.
                          */
 
-                        if (LibraryOperators.registrationProcess() == true) {
+                        if (ControllerOperators.registrationProcess()) {
                             System.out.println(Constant.GRAZIE_PER_ISCRIZIONE);
 
                         } else {
@@ -324,8 +324,7 @@ public class Controller {
                          * continua a ciclare oppure si termina il programma.
                          */
 
-                        //utilizzare login controller
-                        username = LibraryOperators.checkLogin();
+                        username = ControllerOperators.checkLogin();
                         User user = Database.getUser(username);
 
                         /**
@@ -338,8 +337,8 @@ public class Controller {
                             System.out.println("Benvenuto " + user.getUsername());
                             LibraryOperators.userExpired(user);
                             if (!user.getName().equals("_expired_")) {
-                                LibraryOperators.renewalRegistration(Database.getUser(username));
-                                menuActionAdmin(user);
+                                ControllerOperators.controllerRenewalRegistration(Database.getUser(username));
+                                menuActionUser(user);
                             }
                         } else System.out.println(View.ERRORE_LOGIN);
 

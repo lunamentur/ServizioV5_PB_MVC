@@ -548,7 +548,7 @@ public class Database {
      * @param type stringa che permette di selezionare il tipo di ricerca da svolgere.
      * @param txt stringa che deve essere ricercata all'interno dell'archivio delle risorse.
      */
-    public boolean searchGeneral(String txt ,String type){
+    public static boolean searchGeneral(String txt, String type){
         count=0;
         for(Resource resource : resourceList.values()){
             switch(type) {
