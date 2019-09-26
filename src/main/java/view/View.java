@@ -1,4 +1,7 @@
 package main.java.view;
+
+import main.java.model.library.LibraryGeneral;
+
 /**
  * Classe View col compito di generare il menu' iniziale con cui si interfaccera' l'utente finale e
  * altri metodi simili .toString() al fine di visualizzare a video messaggi di errore, domande, simboli e altro.
@@ -126,4 +129,26 @@ public class View {
     public static void stampaRichiestaSingola(String richiestaMenu) {
         System.out.println(richiestaMenu);
     }
+
+
+    /**
+     * Metodo per l'acquisizione e visualizzazione della ricerca risorse all'interno del Database.
+     */
+    public void viewResearchResource(String msg) {
+            stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
+            stampaMenuSpecifico(RICHIESTE_MENU_RICERCA);
+            stampaRichiestaSingola(RICERCA);
+    }
+
+    /**
+     * Metodo per l'acquisizione e visualizzazione
+     */
+
+
+
+    /**
+     * Metodo per l'acquisizione e visualizzazione
+     */
+
+
 }

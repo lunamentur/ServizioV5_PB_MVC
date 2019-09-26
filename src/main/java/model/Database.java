@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -25,7 +26,8 @@ public class Database {
     Map<String, User> userList = new HashMap<>();
     Map<String, Admin> adminList = new HashMap<>();
 
-///////////////////////////metodi utente
+
+    ///////////////////////////metodi utente
     public void insertUser(User newuser){
         userList.put(newuser.getUsername(), newuser);
     }
@@ -195,5 +197,61 @@ public class Database {
         if(count== prestitoList.size()){
             System.out.println(Constant.USER_NON_HA_PRESTITI);
         }
-    }
+
+        /**
+         * Metodo per la ricerca di una risorsa tramite dei parametri generici.
+         * Se la stringa viene trovata allora vengono stampati a video alcuni parametri essenziali della risorsa cercata.
+         * @param type stringa che permette di selezionare il tipo di ricerca da svolgere.
+         * @param txt stringa che deve essere ricercata all'interno dell'archivio delle risorse.
+         */
+        public boolean searchGeneral(String txt String type){
+            count=0;
+            for(Resource resource : resourceList.values()){
+                switch(type) {
+                    case "title":
+                        if(resource.getTitle().equalsIgnoreCase(txt)){
+                            System.out.println(resource.toString());
+                        }else{
+                            count++;
+                        }
+                        break;
+
+                    case "author":
+                        boolean k=false;
+                        for(int i=0; i<resource.getAuthor().size(); i++) {
+                            if(resource.getAuthor().get(i).toLowerCase().contains(txt.toLowerCase())){
+                                k=true;
+                            }
+                        }
+                        if(k){
+                            System.out.println(resource.toString());
+                        }else{
+                            count++;                    }
+                        break;
+
+                    case "genre":
+                        if(resource.getGenre().equals(txt)){
+                            System.out.println(resource.toString());
+                        }else{
+                            count++;                    }
+                        break;
+
+                    case "year":
+                        Integer year = Integer.valueOf(txt);
+                        if(resource.getYearPub() == year){
+                            System.out.println(resource.toString());
+                        }else{
+                            count++;
+                        }
+                        break;
+                }
+            }
+            boolean constant;
+            constant= (count==resourceList.size());
+            return constant;
+        }
+
+
+
+
 }
