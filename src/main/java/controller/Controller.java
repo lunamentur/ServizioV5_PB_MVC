@@ -124,8 +124,8 @@ public class Controller {
                      * {@link Database#printSpecificResource(String)}
                      */
                     case 1:
-                        Database.printSpecificResource(View.BOOK);
-                        Database.printSpecificResource(View.FILM);
+                        ControllerResources.controllerPrintSpecificResource(Constant.BOOK);
+                        ControllerResources.controllerPrintSpecificResource(Constant.FILM);
                         break;
                     /**
                      * Aggiungere una risorsa all'elenco.
@@ -142,7 +142,7 @@ public class Controller {
                     case 3:
                         view.stampaRichiestaSingola(View.BARCODE);
                         int number = ViewLibraryGeneral.readInt();
-                        Database.removeResource(number);
+                        ControllerResources.removeResource(number);
                         break;
 
                     /**

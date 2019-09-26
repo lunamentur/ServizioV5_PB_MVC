@@ -5,6 +5,7 @@ import main.java.view.*;
 import main.java.model.*;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 public class ControllerOperators {
     public static LocalDate birthDate;
@@ -127,6 +128,26 @@ public class ControllerOperators {
         }
         return birthDate;
     }
+
+    /**
+     * Metodo che permette di visualizzare i prestiti attivi di un utente.
+     * Controllo percio\' che il prestito sia attivo, ovvero l'etichetta on_off sia true, altrimenti se false significa che e\' scaduto.
+     */
+    public static void printActivePrestitiUser(String username){
+        int count=0;
+        for (Map.Entry<String, Prestito> entry : Database.prestitoList.entrySet()) {
+            if(entry.getValue().getUsername().equals(username) && entry.getValue().getOn_off()){
+                System.out.println("Idprestito: "+entry.getValue().getCodePrestito()+ "\t Risorsa: "+resourceList.get(entry.getValue().getBarcode()).getTitle());
+            } else count++;
+        }
+        /**
+         * se non ha nessun prestito attivo allora viene stampato a video un messaggio di avviso.
+         */
+        if(count== prestitoList.size()){
+            System.out.println(Constant.USER_NON_HA_PRESTITI);
+        }
+    }
+
 
 
 }

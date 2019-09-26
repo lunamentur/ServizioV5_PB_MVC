@@ -111,7 +111,7 @@ public class View {
     /**
      * Metodo che permette di stampare il Menu'
      */
-    public void stampaMenuSpecifico(String[] richiesteMenu)
+    public static void stampaMenuSpecifico(String[] richiesteMenu)
     {
         System.out.println(CORNICETTA);
         for (int k=0; k < richiesteMenu.length; k++)
@@ -139,18 +139,24 @@ public class View {
     }
 
     /**
-     * Metodo per l'acquisizione e visualizzazione
+     * Metodo visualizzazione menu azioni admin
      */
     public void viewActionAdmin(){
         stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
         stampaMenuSpecifico(RICHIESTE_MENU_ADMIN);
     }
 
+    /**
+     * Metodo visualizzazione menu azioni user
+     */
     public void viewActionUser(){
         stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
         stampaMenuSpecifico(View.RICHIESTE_MENU_USER);
     }
 
+    /**
+     * Metodo visualizzazione menu iniziale
+     */
     public void viewMain(){
         int count=0;
         if(count>0){
@@ -164,11 +170,17 @@ public class View {
         }
     }
 
+    /**
+     * Metodo visualizzazione pannello utente
+     */
     public void viewPannelUser(){
         stampaRichiestaSingola(MG_ANCORA + PREMI_INDIETRO);
         stampaMenuSpecifico(RICHIESTE_MENU_INIZIALE);
     }
 
+    /**
+     * Metodo visualizzazione rinnovo iscrizione
+     */
     public void viewRenewalRegistrazion(){
         stampaRichiestaSingola(MG_SCADUTA_ISCRIZIONE);
         stampaRichiestaSingola(RINNOVO);
@@ -180,5 +192,14 @@ public class View {
     public static void viewMsgError(){
         stampaRichiestaSingola(MG_ERRORE);
     }
+
+    /**
+     * Metodo stampa risorse dal database
+     */
+    public static void viewPrintSpecificResource(String type){
+        stampaRichiestaSingola("[LISTA "+type+"]");
+        stampaRichiestaSingola(CORNICETTA);
+    }
+
 
 }

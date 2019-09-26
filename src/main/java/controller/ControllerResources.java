@@ -225,4 +225,41 @@ public class ControllerResources {
         return res;
     }
 
+    /**
+     * Metodo per stampare a video le risorse del database
+     */
+    public static void controllerPrintSpecificResource(String type){
+        View.viewPrintSpecificResource(type);
+        Database.printSpecificResource(type);
+    }
+
+    /**
+     * Metodo che permette di "rimuovere", in maniera fittizia, una risorsa dall'elenco di risorse.
+     * Se la risorsa ha piu\' di una copia bisogna decrementarla di una, ovviamente il numero in posizione 0.
+     * Viene tenuta traccia dello storico della risorsa, infatti anche se le copie sono esaurite rimangono all'interno dell'archivio.
+     */
+    public static void removeResource(int barcode) {
+        if(Database.checkIfResource(barcode)) {
+            Integer[] copie = Database.getResource(barcode).getLicense();
+            /**
+             * Se il numero di copie e quello delle copie in prestito e\' uguale allora le copie
+             * sono tutte in prestito, quindi non e\' possibile effettuare la rimozione fittizia.
+             */
+            if(copie[0]!=copie[1]){
+                /**
+                 * Se c'e\' una o piu\' di una copia della risorsa la decrementa e controlla che sia a zero.
+                 * Altrimenti e\' nulla percio\' compare un messaggio di avviso.
+                 */
+                if(copie[0] >= 1){
+                    Database.decrementCopyOrLicenze(barcode,0 );
+                    System.out.println(Constant.MG_AZIONE_SUCCESSO);
+                    if (copie[0] == 0) System.out.println(Constant.RISORSA_SCADUTA);
+                }else{
+                    //ovvero uguale a zero (perche\' <1)
+                    System.out.println(Constant.RISORSA_SCADUTA);
+                }
+            } else System.out.println(Constant.RISORSA_IMPOSSIBILE_RIMUOVERE);
+        } else View.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
+    }
+
 }

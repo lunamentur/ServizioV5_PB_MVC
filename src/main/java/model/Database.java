@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 
 /**
  * Classe Database che racchiude metodi e gestione del database in cui sono raccolti tutti gli user e oggetti inerenti.
@@ -171,15 +169,13 @@ public class Database {
         resourceList.put(newRes.getBarcode(), newRes);
         System.out.println("<+> New Resource added!");
     }
+
     /**
      * Metodo, di stampa, che permette di visualizzare a video la lista di tutte le risorse di una specifica categoria all'interno del database, l'HashMap.
      * Infatti tramite il parametro type e\' possibile scegliere il tipo di categoria da voler stampare.
      * @param type {@link Resource}
      */
     public static void printSpecificResource(String type){
-        System.out.println("[LISTA "+type+"]");
-        view.stampaRichiestaSingola(CORNICETTA);
-
         resourceList.forEach((k,v)-> {
             Resource res = resourceList.get(k);
             if(res.getType().equalsIgnoreCase(type)){
@@ -188,35 +184,6 @@ public class Database {
         });
     }
 
-    /**
-     * Metodo che permette di "rimuovere", in maniera fittizia, una risorsa dall'elenco di risorse.
-     * Se la risorsa ha piu\' di una copia bisogna decrementarla di una, ovviamente il numero in posizione 0.
-     * Viene tenuta traccia dello storico della risorsa, infatti anche se le copie sono esaurite rimangono all'interno dell'archivio.
-     * {@link #decrementCopyOrLicenze(int, int)}
-     */
-    public static void removeResource(int barcode) {
-        if(checkIfResource(barcode)) {
-            Integer[] copie = getResource(barcode).getLicense();
-            /**
-             * Se il numero di copie e quello delle copie in prestito e\' uguale allora le copie
-             * sono tutte in prestito, quindi non e\' possibile effettuare la rimozione fittizia.
-             */
-            if(copie[0]!=copie[1]){
-                /**
-                 * Se c'e\' una o piu\' di una copia della risorsa la decrementa e controlla che sia a zero.
-                 * Altrimenti e\' nulla percio\' compare un messaggio di avviso.
-                 */
-                if(copie[0] >= 1){
-                    decrementCopyOrLicenze(barcode,0 );
-                    System.out.println(MG_AZIONE_SUCCESSO);
-                    if (copie[0] == 0) System.out.println(RISORSA_SCADUTA);
-                }else{
-                    //ovvero uguale a zero (perche\' <1)
-                    System.out.println(RISORSA_SCADUTA);
-                }
-            } else System.out.println(RISORSA_IMPOSSIBILE_RIMUOVERE);
-        } else view.stampaRichiestaSingola(NON_ESISTE_RISORSA);
-    }
 
     /**
      * METODI RESOURCE CHECK
@@ -303,6 +270,7 @@ public class Database {
      * Mediante l'utilizzo di tale HashMap siamo in grado di collegare ogni prestito (con i relativi campi di informazioni) con una key univoca e primaria.
      */
     static Map< String, Prestito> prestitoList= new HashMap<>();
+
     static Map<String, Prestito> prestitoListForIteration = new HashMap<>();
 
 
@@ -392,6 +360,7 @@ public class Database {
         return prestitoList.get(codePrestito);
     }
 
+    //DA DIVIDERE E METTERE NELLA VIEW E CONTROLLER
     /**
      * Metodo che permette di visualizzare i prestiti attivi di un utente.
      * Controllo percio\' che il prestito sia attivo, ovvero l'etichetta on_off sia true, altrimenti se false significa che e\' scaduto.
@@ -427,6 +396,7 @@ public class Database {
      * METODI PER NUMERO DI PRESTITI PER ANNO SOLARE E USER.
      */
 
+    //BISOGNEREBBE LA STAMPA METTERLA NELLA VIEW E UN PEZZO DEL CONTROLLER
     /**
      * Metodo che permette di visualizzare a video il numero di prestiti per anno solare da parte di un utente.
      * Viene utilizzata inizialmente la lista di user per ricercare nella lista prestiti il nome utente.
@@ -484,6 +454,7 @@ public class Database {
         System.out.println(year + " : " + count);
     }
 
+    //BISOGNEREBBE LA STAMPA METTERLA NELLA VIEW E UN PEZZO DEL CONTROLLER
     /**
      * Metodo che restituisce quale risorsa, oggetto di tipo Resource, ha avuto il maggior numero di prestiti per anno solare.
      */
@@ -542,6 +513,8 @@ public class Database {
     /**
      * METODI PER LA RICERCA DI RISORSE, UTILIZZATA DALL'USER E DALL'ADMIN.
      */
+
+    //BISOGNEREBBE LA STAMPA METTERLA NELLA VIEW E UN PEZZO DEL CONTROLLER
     /**
      * Metodo per la ricerca di una risorsa tramite dei parametri generici.
      * Se la stringa viene trovata allora vengono stampati a video alcuni parametri essenziali della risorsa cercata.
@@ -598,6 +571,7 @@ public class Database {
     /**
      * INIZIALIZZAZIONE DI OGGETTI PREDEFINITI
      */
+
 
     /**
      * Creazione di oggetti preimpostati.
