@@ -111,6 +111,9 @@ public class ControllerOperators {
      * Prende da tastiera anno, mese e giorno e crea una data di tipo LocalDate.
      * @return birthDate
      */
+    public  void userExpired(User user) {
+        lo.userExpired(user);
+    }
     public  LocalDate insertDate(){
         boolean end= false;
         view.stampaRichiestaSingola(Constant.DATA_NASCITA);

@@ -47,12 +47,15 @@ public class Controller {
         /**
          * Inizializzazione di oggetti predefiniti.
          */
+        if(!database.readAllHash(View.FILE_USER) || !database.readAllHash(View.FILE_ADMIN) || !database.readAllHash(View.FILE_PRESTITO) || !database.readAllHash(View.FILE_RESOURCE)) {
+            cr.initAllObject();
+        }
         /**
          * Una volta aperto il database elimina in automatico i prestiti scaduti/terminati.
          */
+        database.removeAutomaticPrestito();
 
         //ora apre il primo menu standard
-        cr.initAllObject();
         menuStandard();
         //fine del menu e del programma
         System.out.println(Constant.FINE_MENU);
@@ -350,7 +353,7 @@ public class Controller {
                          */
                         if (!username.equals("_error_")) {
                             System.out.println("Benvenuto " + user.getUsername());
-                            lo.userExpired(user);
+                            co.userExpired(user);
                             if (!user.getName().equals("_expired_")) {
                                 co.controllerRenewalRegistration(database.getUser(username));
                                 menuActionUser(user);
