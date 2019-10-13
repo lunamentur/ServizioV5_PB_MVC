@@ -1,4 +1,7 @@
 package main.java.model;
+import main.java.model.library.LibraryResources;
+
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.Period;
@@ -19,35 +22,54 @@ public class Database {
     /**
      * Elenco delle variabili utilizzate all'interno del Database.
      */
-    private static int i=0;
-    private static boolean end= false;
-    private static int count=0;
-    private static String temp;
-    private static LocalDate date=LocalDate.now();
-    private static int year;
+    private  int i=0;
+    private  boolean end= false;
+    private  int count=0;
+    private  String temp;
+    private  LocalDate date=LocalDate.now();
+    private  int year;
 
     /**
      * @param yearLimit Anno limite utilizzato in alcuni metodi. {@link #numberOfPrestitiCalendarYear()}
      */
-    private static int yearLimit = date.getYear() - 3;
+    private  int yearLimit = date.getYear() - 3;
 
     /**
      * Lista di user, oggetti di tipo User, con key il nome utente, username di tipo String.
      * Mediante l'utilizzo di tale HashMap siamo in grado di collegare ogni utente (con le relative informazioni anagrafiche) con una key, ovvero username.
      */
-    static Map<String, User> userList= new HashMap<>();
-    static Map<String, Admin> adminList= new HashMap<>();
+     Map<String, User> userList= new HashMap<>();
+     Map<String, Admin> adminList= new HashMap<>();
+
+    public  Map<String, User> getUserList() {
+        return userList;
+    }
+
+    public  Map<String, Admin> getAdminList() {
+        return adminList;
+    }
+
+    public  Map<Integer, Resource> getResourceList() {
+        return resourceList;
+    }
+
+    public  Map<String, Prestito> getPrestitoList() {
+        return prestitoList;
+    }
+
+    public  Map<String, Prestito> getPrestitoListForIteration() {
+        return prestitoListForIteration;
+    }
 
 
-
-    /**
+/**
      * METODI USER
      */
 
     /**
      * Medoto che permette l'inserimento di un nuovo user, oggetto di tipo User, all'interno della nostra lista di user, HashMap.
      */
-    public static void insertUser(User newuser){
+    public  void insertUser(User newuser){
         userList.put(newuser.getUsername(),newuser);
         System.out.println("<+> New user added!");
     }
@@ -55,7 +77,7 @@ public class Database {
     /**
      * Medoto che permette l'inserimento di un nuovo admin, oggetto di tipo Admin, all'interno della nostra lista di admin, HashMap.
      */
-    public static void insertAdmin(Admin newadmin) {
+    public  void insertAdmin(Admin newadmin) {
         adminList.put(newadmin.getUsername(), newadmin);
         System.out.println("<+> New admin added!");
     }
@@ -63,7 +85,7 @@ public class Database {
     /**
      * Metodo, di stampa, che permette di visualizzare a video la lista di tutti gli user all'interno del database, l'HashMap.
      */
-    public static void listUsers(){
+    public  void listUsers(){
         for (Map.Entry<String, User> user : userList.entrySet()) {
             System.out.println(user.toString());
         }
@@ -78,7 +100,7 @@ public class Database {
      * @return true login riuscito corettamente.
      */
 
-    public static boolean checkLoginIfTrue(String username, String password){
+    public  boolean checkLoginIfTrue(String username, String password){
         boolean result = false;
         if(checkIfAdmin(username)) {
             boolean a = adminList.containsKey(username);
@@ -99,10 +121,10 @@ public class Database {
      * @return true se e\' presente
      * @return false altrimenti
      */
-    public static boolean checkIfUser(String username){
+    public  boolean checkIfUser(String username){
         return userList.containsKey(username);
     }
-    public static boolean checkIfAdmin(String username){
+    public  boolean checkIfAdmin(String username){
         return adminList.containsKey(username);
     }
 
@@ -112,10 +134,10 @@ public class Database {
      * @return user
      */
 
-    public static User getUser(String username){
+    public  User getUser(String username){
         return userList.get(username);
     }
-    public static  Admin getAdmin(String username){
+    public   Admin getAdmin(String username){
         return adminList.get(username);
     }
 
@@ -127,7 +149,7 @@ public class Database {
      * @return false se l'user non e\' maggiorenne. (e quindi non ha accesso ai servizi di prestito temporaneo)
      * @return true se l'user e\' maggiorenne.
      */
-    public static boolean checkIf18(LocalDate birthDate){
+    public  boolean checkIf18(LocalDate birthDate){
         LocalDate now = LocalDate.now();
         int age = Period.between(birthDate,now).getYears();
         return age >= 18;
@@ -142,7 +164,7 @@ public class Database {
      * Lista di risorse, oggetti di tipo Resource, con key barcode di tipo Int.
      * Mediante l'utilizzo di tale HashMap siamo in grado di collegare ogni risorsa (con i relativi campi di informazioni) con una key, ovvero il barcode.
      */
-    static Map<Integer, Resource> resourceList= new HashMap<>();
+     Map<Integer, Resource> resourceList= new HashMap<>();
 
 
     /**
@@ -150,7 +172,7 @@ public class Database {
      * @param barcode codice a barre univoco associato a una risorsa.
      * @return Resource
      */
-    public static Resource getResource(int barcode){
+    public  Resource getResource(int barcode){
         return resourceList.get(barcode);
     }
 
@@ -158,14 +180,14 @@ public class Database {
      * Metodo che permette di verificare se una risorsa e\' presente nel Database
      * @return true se la risorsa e\' presente, altrimenti false.
      */
-    public static boolean checkIfResource(int barcode){
+    public  boolean checkIfResource(int barcode){
         return resourceList.containsKey(barcode);
     }
 
     /**
      * Medoto che permette l'inserimento di una nuova, oggetto di tipo Resource, all'interno della nostra lista di risorse, HashMap.
      */
-    public static void insertResource(Resource newRes){
+    public  void insertResource(Resource newRes){
         resourceList.put(newRes.getBarcode(), newRes);
         System.out.println("<+> New Resource added!");
     }
@@ -175,7 +197,7 @@ public class Database {
      * Infatti tramite il parametro type e\' possibile scegliere il tipo di categoria da voler stampare.
      * @param type {@link Resource}
      */
-    public static void printSpecificResource(String type){
+    public  void printSpecificResource(String type){
         resourceList.forEach((k,v)-> {
             Resource res = resourceList.get(k);
             if(res.getType().equalsIgnoreCase(type)){
@@ -194,7 +216,7 @@ public class Database {
      * {@link Resource}
      * @return true se la risorsa e\' book, altrimenti un film con false.
      */
-    public static boolean checkType(int barcode, String type){
+    public  boolean checkType(int barcode, String type){
         return getResource(barcode).getType().equals(type);
     }
 
@@ -203,7 +225,7 @@ public class Database {
      * Metodo che controlla di che tipo &egrave; la risorsa e restituisce il numero dell'indice corrispondente legato all'utente.
      * Ovvero se un BOOK=0 e se FILM=1
      */
-    public static int choiceTypeResource(int barcode) {
+    public  int choiceTypeResource(int barcode) {
         if (checkType(barcode, Constant.BOOK)) {
             return 0;
         } else return 1;
@@ -218,7 +240,7 @@ public class Database {
      * ovvero il numero di copie attualmente in prestito.
      * @param number se 0 e\' associato al numero di copie, se 1 al numero di risorse in prestito. {@link Resource}
      */
-    public static void incrementCopyOrLicenze(int barcode, int number){
+    public  void incrementCopyOrLicenze(int barcode, int number){
         Integer[] copie= getResource(barcode).getLicense();
         copie[number]++;
         getResource(barcode).setLicense(copie);
@@ -230,7 +252,7 @@ public class Database {
      * il numero di copie e\' perche\' una copia della risorsa e\' stata eliminata dal database.
      * @param number {@link #incrementCopyOrLicenze(int, int)}
      */
-    public static void decrementCopyOrLicenze(int barcode, int number){
+    public  void decrementCopyOrLicenze(int barcode, int number){
         Integer[] copie= getResource(barcode).getLicense();
         copie[number]--;
         getResource(barcode).setLicense(copie);
@@ -242,7 +264,7 @@ public class Database {
      * corrisponde al numero di licenze di ogni singola tipologia di risorsa che l'utente puo\' usufruire.
      * @see User
      */
-    public static void incrementLicenzeUser(String username, int number){
+    public  void incrementLicenzeUser(String username, int number){
         Integer [] value= getUser(username).getBorrowed();
         value[number]++;
         getUser(username).setBorrowed(value);
@@ -254,7 +276,7 @@ public class Database {
      * corrisponde al numero di licenze di ogni singola tipologia di risorsa che l'utente puo\' usufruire.
      * @see User
      */
-    public static void decrementLicenzeUser(String username, int number){
+    public  void decrementLicenzeUser(String username, int number){
         Integer [] value= getUser(username).getBorrowed();
         value[number]--;
         getUser(username).setBorrowed(value);
@@ -269,9 +291,9 @@ public class Database {
      * Lista di prestiti, oggetti di tipo Prestito, con key codePrestito di tipo Int.
      * Mediante l'utilizzo di tale HashMap siamo in grado di collegare ogni prestito (con i relativi campi di informazioni) con una key univoca e primaria.
      */
-    static Map< String, Prestito> prestitoList= new HashMap<>();
+     Map< String, Prestito> prestitoList= new HashMap<>();
 
-    static Map<String, Prestito> prestitoListForIteration = new HashMap<>();
+     Map<String, Prestito> prestitoListForIteration = new HashMap<>();
 
 
 
@@ -280,7 +302,7 @@ public class Database {
      * l'identificatore di tale prestito e\' un codice univoco e inoltre viene tenuta traccia della data di inizio prestito e fine.
      * {@link Prestito}
      */
-    public static void insertPrestito(Prestito prestito){
+    public  void insertPrestito(Prestito prestito){
         prestitoList.put(prestito.getCodePrestito(), prestito);
         System.out.println("<+> New loan added!");
     }
@@ -292,7 +314,7 @@ public class Database {
      * {@link Prestito}
      * {@link Resource}
      */
-    public static void removeAutomaticPrestito(){
+    public  void removeAutomaticPrestito(){
         /**
          * Per ogni singolo prestito presente nell'hashmap dei prestiti cerca quelli scaduti.
          */
@@ -324,7 +346,7 @@ public class Database {
      * @param codicePrestito {@link Prestito}
      * {@link #decrementCopyOrLicenze(int, int)} and {@link #decrementLicenzeUser(String, int)} and {@link #choiceTypeResource(int)}
      */
-    public static void removePrestito(int barcode, String username, String codicePrestito){
+    public  void removePrestito(int barcode, String username, String codicePrestito){
         decrementCopyOrLicenze(barcode,1);
         int type = choiceTypeResource(barcode);
         decrementLicenzeUser(username, type);
@@ -336,7 +358,7 @@ public class Database {
      * @return true se il prestito e\' presente e se e\' attivo, altrimenti se e\' scaduto o non e\' presente ritorna false.
      * {@link Prestito}
      */
-    public static boolean checkIfPrestito(String codePrestito) {
+    public  boolean checkIfPrestito(String codePrestito) {
         return prestitoList.containsKey(codePrestito) && prestitoList.get(codePrestito).getOn_off();
     }
 
@@ -345,7 +367,7 @@ public class Database {
      * @return true se il prestito e\' scaduto, altrimenti false.
      * {@link Prestito}
      */
-    private static boolean checkIfPrestitoScaduto(String codePrestito) {
+    private  boolean checkIfPrestitoScaduto(String codePrestito) {
         LocalDate dataNow= LocalDate.now();
         LocalDate dataScadenza= getPrestito(codePrestito).getDataScadenza();
         return dataNow.isAfter(dataScadenza);
@@ -356,7 +378,7 @@ public class Database {
      * @param codePrestito codice univoco associato a un prestito tra risorsa e utente.
      * @return oggetto di tipo Prestito {@link Prestito}.
      */
-    public static Prestito getPrestito(String codePrestito){
+    public  Prestito getPrestito(String codePrestito){
         return prestitoList.get(codePrestito);
     }
 
@@ -365,7 +387,7 @@ public class Database {
      * Metodo che permette di visualizzare i prestiti attivi di un utente.
      * Controllo percio\' che il prestito sia attivo, ovvero l'etichetta on_off sia true, altrimenti se false significa che e\' scaduto.
      */
-    public static void printActivePrestitiUser(String username){
+    public  void printActivePrestitiUser(String username){
         int count=0;
         for (Map.Entry<String, Prestito> entry : prestitoList.entrySet()) {
             if(entry.getValue().getUsername().equals(username) && entry.getValue().getOn_off()){
@@ -385,7 +407,7 @@ public class Database {
      * @param username {@link User}
      * @return true se ha almeno un prestito attivo, altrimenti nessuno.
      */
-    public static boolean userHavePrestito(String username) {
+    public  boolean userHavePrestito(String username) {
         for (Map.Entry<String, Prestito> entry : prestitoList.entrySet()) {
             if (entry.getValue().getUsername().equals(username) && entry.getValue().getOn_off()) return true;
         }
@@ -402,7 +424,7 @@ public class Database {
      * Viene utilizzata inizialmente la lista di user per ricercare nella lista prestiti il nome utente.
      * Successivamente viene fattao scorrere l'archivio partendo dalla data dell'interrogazione fino a quella di qualche anno fa.
      */
-    public static void numberOfPrestitiUserCalendarYear(){
+    public  void numberOfPrestitiUserCalendarYear(){
         year=date.getYear();
         boolean end = false;
         do {
@@ -424,7 +446,7 @@ public class Database {
      * Metodo che permette di visualizzare a video il numero di prestiti per anno solare.
      * Percio\' faccio scorrere l'archivio partendo dalla data dell'interrogazione fino a quella di qualche anno fa.
      */
-    public static void numberOfPrestitiCalendarYear(){
+    public  void numberOfPrestitiCalendarYear(){
         year=date.getYear();
         boolean end = false;
         do {
@@ -443,7 +465,7 @@ public class Database {
      * Metodo che permette di contare tutti i prestiti in un dato anno, passato come valore.
      * @param year anno di cui si vuole visualizzare il numero di prestiti.
      */
-    public static void prestitiCalendarYear(int year){
+    public  void prestitiCalendarYear(int year){
         count=0;
         for (Map.Entry<String, Prestito> entry : prestitoList.entrySet()) {
             /**
@@ -458,7 +480,7 @@ public class Database {
     /**
      * Metodo che restituisce quale risorsa, oggetto di tipo Resource, ha avuto il maggior numero di prestiti per anno solare.
      */
-    public static void resourceCalendarYear(){
+    public  void resourceCalendarYear(){
         year=date.getYear();
         boolean end = false;
         do {
@@ -495,7 +517,7 @@ public class Database {
     /**
      * Metodo che permette di ottenere il numero di proroghe per anno solare.
      */
-    public static void prorogaCalendarYear(){
+    public  void prorogaCalendarYear(){
         year=date.getYear();
         boolean end = false;
         do {
@@ -521,7 +543,7 @@ public class Database {
      * @param type stringa che permette di selezionare il tipo di ricerca da svolgere.
      * @param txt stringa che deve essere ricercata all'interno dell'archivio delle risorse.
      */
-    public static boolean searchGeneral(String txt, String type){
+    public  boolean searchGeneral(String txt, String type){
         count=0;
         for(Resource resource : resourceList.values()){
             switch(type) {
@@ -576,66 +598,13 @@ public class Database {
     /**
      * Creazione di oggetti preimpostati.
      */
-    public static void initAllObject(){
-        Integer [] borrowed_test={0,0};
-        Integer[] license_book1 = {3, 2};
-        Integer[] license_book2 = {3, 1};
-        Integer[] borrowed1 = {2, 0};
-        Integer[] license_film1 = {3, 1};
-        Integer[] license_film2 = {3, 0};
-        Integer[] borrowed2 = {1, 1};
-        List<String> langues_test = new ArrayList<String>();
-        List<String> author_test = new ArrayList<String>();
-        langues_test.add("inglese");
-        langues_test.add("spagnolo");
-        author_test.add("Gino");
-        author_test.add("Pino");
-        //genero utenti
-        Admin admin_reda = new Admin( "admin_reda", "password");
-        Admin admin_simona = new Admin("admin_simona", "password123");
-        adminList.put(admin_reda.getUsername(), admin_reda);
-        adminList.put(admin_simona.getUsername(), admin_simona);
 
-        //genero utenti
-        User user1 = new User("test", "test", "test1", "test1", LocalDate.of(1996, 01, 01), LocalDate.of(2019, 1, 1), borrowed1);
-        User user3 = new User("test", "test", "test3", "test3", LocalDate.of(1996, 01, 01), LocalDate.of(2018, 1, 1), borrowed2);
-        userList.put(user1.getUsername(), user1);
-        userList.put(user3.getUsername(), user3);
-
-        User userRinnovo = new User("test", "test", "rinnovo", "rinnovo", LocalDate.of(1996, 01, 01), LocalDate.of(2014, 04, 18), borrowed_test);
-        userList.put(userRinnovo.getUsername(), userRinnovo);
-
-        User userScaduto = new User("test", "test", "scaduto", "scaduto", LocalDate.of(1996, 01, 01), LocalDate.of(2012, 02, 03), borrowed_test);
-        userList.put(userScaduto.getUsername(), userScaduto);
-
-        //genero libri
-        Book book1 = new Book(111, Constant.BOOK, "libro di test 1", langues_test, author_test, 2000, "Romanzo", license_book1, 220, "Giunti");
-        Book book2 = new Book(222, Constant.BOOK, "libro di test 2", langues_test, author_test, 2000, "Romanzo", license_book2, 220, "Giunti");
-        resourceList.put(book1.getBarcode(), book1);
-        resourceList.put(book2.getBarcode(), book2);
-
-        //genero film
-        Film film1 = new Film(333, Constant.FILM, "Film 1", author_test, langues_test, 2001, "horror", license_film1, 18, 125);
-        Film film2 = new Film(444, Constant.FILM, "Film 2", author_test, langues_test, 2003, "horror", license_film2, 18, 139);
-        resourceList.put(film1.getBarcode(), film1);
-        resourceList.put(film2.getBarcode(), film2);
-
-        //genero prestiti
-        Prestito pScaduto = new Prestito(LibraryResources.generateId(user1.getUsername(), book1.getBarcode()), user1.getUsername(), book1.getBarcode(), LocalDate.of(2019, 2, 3), LocalDate.of(2019, 3, 3));
-        Prestito p4 = new Prestito(LibraryResources.generateId(user1.getUsername(), book2.getBarcode()), user1.getUsername(), book2.getBarcode(), LocalDate.of(2019, 4, 1), LocalDate.of(2019, 5, 1));
-        Prestito p5 = new Prestito(LibraryResources.generateId(user3.getUsername(), book1.getBarcode()), user3.getUsername(), book1.getBarcode(), LocalDate.of(2019, 3, 31), LocalDate.of(2019, 4, 30));
-        Prestito p3 = new Prestito(LibraryResources.generateId(user3.getUsername(), film1.getBarcode()), user3.getUsername(), film1.getBarcode(), LocalDate.of(2019, 4, 2), LocalDate.of(2019, 5, 2));
-        prestitoList.put(pScaduto.getCodePrestito(), pScaduto);
-        prestitoList.put(p3.getCodePrestito(), p3);
-        prestitoList.put(p4.getCodePrestito(), p4);
-        prestitoList.put(p5.getCodePrestito(), p5);
-    }
 
     /**
      * Metodo che consente di salvare le HashMap in modo generico.
      * @param name nome che vogliamo dare al file in cui salviamo i dati.
      */
-    public static void saveAllHash(String name){
+    public  void saveAllHash(String name){
 
         File file = new File(name +".dat");
         file.delete();
@@ -677,7 +646,7 @@ public class Database {
      * @param name il nome del file che si vuole importare\leggere.
      * @return true se l'azione &egrave; avvenuta con successo, altrimenti false.
      */
-    public static boolean readAllHash(String name) {
+    public  boolean readAllHash(String name) {
         try {
             File file = new File(name + ".dat");
             if (file.exists()) {

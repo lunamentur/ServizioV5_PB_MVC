@@ -4,52 +4,57 @@ import main.java.model.library.LibraryResources;
 import main.java.view.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ControllerResources {
 
     //////////////////////////////////////////////////////////////////////////////////
-    private static Prestito prestito;
-    private static Resource res;
-    private static Book book;
-    private static Film film;
-    public static LocalDate dataInizio, dataScadenza;
-    private static int giorniIntervalloProroga=3;
+    private  Prestito prestito;
+    private  Resource res;
+    private  Book book;
+    private  Film film;
+    public  LocalDate dataInizio, dataScadenza;
+    private  int giorniIntervalloProroga=3;
     /**
      * la durata massima, in numero di giorni, del prestito di una qualsiasi risorsa di tipo Book.
      */
-    private static long dayMaxBook = 30;
+    private  long dayMaxBook = 30;
 
     /**
      * Creazione di variabili e oggetti utili per i metodi di controllo.
      */
-    private static String string;
-    private static int choice, year, barcode;
-    private static int vincolo=3;
-    private static Integer [] licenseList= {0,0};//licenze con due componenti.
+    private  String string;
+    private Database db;
+    private LibraryResources lr = new LibraryResources(db);
+    private  int choice, year, barcode;
+    private  int vincolo=3;
+    private  Integer [] licenseList= {0,0};//licenze con due componenti.
 
     /**
      * variabili che corrispondono agli indici della lista di licenze.
      * {@link Resource}
      */
-    private static int copieRisorsa = 0;
-    private static int copieinPrestito = 1;
+    private  int copieRisorsa = 0;
+    private  int copieinPrestito = 1;
     //////////////////////////////////////////////////////////////////////////////////
-
+    public ControllerResources(Database db){
+        this.db = db;
+    }
     /**
-     * Metodo per creare una risorsa e salvarla nel Database.
+     * Metodo per creare una risorsa e salvarla nel db.
      * Se la risorsa &egrave; gia\' presente nel database allora si incrementa il numero di copie disponibili al prestito.
      * Altrimenti si continua con la creazione, chiedendo l'inserimento di ogni parametro.
      * Si fa la sistinzione tra oggetto di tipo Book e di tipo Film.
      */
-    public static void createResourceProcess(){
+    public  void createResourceProcess(){
         View.stampaRichiestaSingola(Constant.CATEGORIA);
         int choice = ViewLibraryGeneral.readIntChoise(1,2);
         //vero se e\' un libro, oppure un film
         if (choice == 1) string = Constant.BOOK;
         else string = Constant.FILM;
         barcode= ViewLibraryGeneral.insertBarcode(vincolo);
-        if(!LibraryResources.checkIfExist(barcode)){
+        if(!lr.checkIfExist(barcode)){
             Resource res= createResource(barcode, string);
             switch(choice)
             {
@@ -58,7 +63,7 @@ public class ControllerResources {
                  */
                 case 1:
                     Book book = new Book(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(Constant.NUM_PAG), ViewLibraryGeneral.insertString(Constant.CASA_EDIT));
-                    Database.insertResource(book);
+                    db.insertResource(book);
                     View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
                     break;
                 /**
@@ -66,7 +71,7 @@ public class ControllerResources {
                  */
                 case 2:
                     Film film = new Film(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(Constant.AGE_RESTRIC), ViewLibraryGeneral.insertNum(Constant.DURATA));
-                    Database.insertResource(film);
+                    db.insertResource(film);
                     View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
                     break;
 
@@ -82,7 +87,7 @@ public class ControllerResources {
     }
 
     /**
-     * Metodo che assembla i metodi per la registrazione del prestito con i relativi controlli e lo salva all'interno del Database.
+     * Metodo che assembla i metodi per la registrazione del prestito con i relativi controlli e lo salva all'interno del db.
      * Se la risorsa non &egrave; disponibile al prestito poiche\' non ha piu\' copie disponibili allora la registrazione del prestito fallisce.
      * @param barcode {@link #barcode}
      * @param codePrestito {@link Prestito}
@@ -91,12 +96,12 @@ public class ControllerResources {
         /**
          * controllo se esiste la risorsa e se &egrave; disponibile al prestito.
          */
-        if(Database.checkIfResource(barcode)){
-            if(LibraryResources.checkIfResourceFree(barcode)){
+        if(db.checkIfResource(barcode)){
+            if(lr.checkIfResourceFree(barcode)){
                 /**
                  * Aumento di uno le copie in prestito, ovvero le licenze, in posizione 1 nell'array.
                  */
-                Database.incrementCopyOrLicenze(barcode, copieinPrestito);
+                db.incrementCopyOrLicenze(barcode, copieinPrestito);
                 /**
                  * definisco gli attributi per creare un oggetto di tipo Prestito.
                  */
@@ -104,10 +109,10 @@ public class ControllerResources {
                 dataScadenza = dataInizio.plusDays(dayMaxBook);
                 prestito = new Prestito(codePrestito, username, barcode, dataInizio, dataScadenza);
                 /**
-                 * inserisco l'oggetto di tipo Prestito all'interno dell'archivio dei prestiti nel Database.
+                 * inserisco l'oggetto di tipo Prestito all'interno dell'archivio dei prestiti nel db.
                  */
-                Database.insertPrestito(prestito);
-                Database.incrementLicenzeUser(username, bookOrFilm);
+                db.insertPrestito(prestito);
+                db.incrementLicenzeUser(username, bookOrFilm);
                 View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
             } else View.stampaRichiestaSingola(Constant.MG_PRESTITO_NON_DISPONIBILE);
         } else View.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
@@ -116,7 +121,7 @@ public class ControllerResources {
     /**
      * Gestione della ricerca di risorse dati in ingresso dei parametri.
      */
-    public static void researchResource(){
+    public  void researchResource(){
         boolean end= false;
         boolean exist= true;
         do{
@@ -130,21 +135,21 @@ public class ControllerResources {
                  * Ricerca per Titolo opera.
                  */
                 case 1:
-                    exist= Database.searchGeneral("title", searchString);
+                    exist= db.searchGeneral("title", searchString);
 
                     break;
                 /**
                  * Ricerca per Autore.
                  */
                 case 2:
-                    exist=Database.searchGeneral("author", searchString);
+                    exist=db.searchGeneral("author", searchString);
 
                     break;
                 /**
                  * Ricerca per Genere.
                  */
                 case 3:
-                    exist=  Database.searchGeneral("genre", searchString);
+                    exist=  db.searchGeneral("genre", searchString);
 
                     break;
 
@@ -152,7 +157,7 @@ public class ControllerResources {
                  * Ricerca per Anno di Pubblicazione.
                  */
                 case 4:
-                    exist= Database.searchGeneral("year", searchString);
+                    exist= db.searchGeneral("year", searchString);
                     break;
 
                 /**
@@ -183,7 +188,7 @@ public class ControllerResources {
      * Si controlla, per avere una sicurezza che l'utente stia accedento solo ed esclusivamente ai prestiti associati al suo account,
      * che il nome utente (username) compaia all'interno del codice prestito inserito.
      */
-    public static String checkInsertId(String username){
+    public  String checkInsertId(String username){
         boolean end = false;
         while(!end){
             View.stampaRichiestaSingola(Constant.CODICE_PRESTITO);
@@ -192,7 +197,7 @@ public class ControllerResources {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(Database.checkIfPrestito(string) && string.contains(username)){
+            if(db.checkIfPrestito(string) && string.contains(username)){
                 end=true;
             } else System.out.println(Constant.NON_ESISTE_PRESTITO);
         }
@@ -200,13 +205,13 @@ public class ControllerResources {
     }
 
 
-    public static void controllerProrogaPrestito(String codePrestito){
+    public  void controllerProrogaPrestito(String codePrestito){
         /**
          * se vero allora procedi, altrimenti stampa errore.
          * controllo che il codice prestito esista, sia attivo e che sia possibile effettuare la proroga.
          */
-        if(LibraryResources.checkProrogaPrestito(codePrestito)){
-            LibraryResources.prorogaPrestito(codePrestito);
+        if(lr.checkProrogaPrestito(codePrestito)){
+            lr.prorogaPrestito(codePrestito);
             View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
         } else View.stampaRichiestaSingola(Constant.NO_PROROGA);
     }
@@ -217,7 +222,7 @@ public class ControllerResources {
      * @param type categoria o tipo della risorsa.
      * @return oggetto di tipo Resource.
      */
-    public static Resource createResource(int barcode, String type){
+    public  Resource createResource(int barcode, String type){
         String title = ViewLibraryGeneral.insertString(Constant.TITLE);
         List ll = ViewLibraryGeneral.insertList(Constant.AUTORI);
         List lingue = ViewLibraryGeneral.insertList(Constant.LINGUE);
@@ -228,9 +233,9 @@ public class ControllerResources {
     /**
      * Metodo per stampare a video le risorse del database
      */
-    public static void controllerPrintSpecificResource(String type){
+    public  void controllerPrintSpecificResource(String type){
         View.viewPrintSpecificResource(type);
-        Database.printSpecificResource(type);
+        db.printSpecificResource(type);
     }
 
     /**
@@ -238,9 +243,9 @@ public class ControllerResources {
      * Se la risorsa ha piu\' di una copia bisogna decrementarla di una, ovviamente il numero in posizione 0.
      * Viene tenuta traccia dello storico della risorsa, infatti anche se le copie sono esaurite rimangono all'interno dell'archivio.
      */
-    public static void removeResource(int barcode) {
-        if(Database.checkIfResource(barcode)) {
-            Integer[] copie = Database.getResource(barcode).getLicense();
+    public  void removeResource(int barcode) {
+        if(db.checkIfResource(barcode)) {
+            Integer[] copie = db.getResource(barcode).getLicense();
             /**
              * Se il numero di copie e quello delle copie in prestito e\' uguale allora le copie
              * sono tutte in prestito, quindi non e\' possibile effettuare la rimozione fittizia.
@@ -251,7 +256,7 @@ public class ControllerResources {
                  * Altrimenti e\' nulla percio\' compare un messaggio di avviso.
                  */
                 if(copie[0] >= 1){
-                    Database.decrementCopyOrLicenze(barcode,0 );
+                    db.decrementCopyOrLicenze(barcode,0 );
                     System.out.println(Constant.MG_AZIONE_SUCCESSO);
                     if (copie[0] == 0) System.out.println(Constant.RISORSA_SCADUTA);
                 }else{
@@ -261,5 +266,56 @@ public class ControllerResources {
             } else System.out.println(Constant.RISORSA_IMPOSSIBILE_RIMUOVERE);
         } else View.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
     }
+    public void initAllObject() {
+        Integer[] borrowed_test = {0, 0};
+        Integer[] license_book1 = {3, 2};
+        Integer[] license_book2 = {3, 1};
+        Integer[] borrowed1 = {2, 0};
+        Integer[] license_film1 = {3, 1};
+        Integer[] license_film2 = {3, 0};
+        Integer[] borrowed2 = {1, 1};
+        List<String> langues_test = new ArrayList<String>();
+        List<String> author_test = new ArrayList<String>();
+        langues_test.add("inglese");
+        langues_test.add("spagnolo");
+        author_test.add("Gino");
+        author_test.add("Pino");
+        //genero utenti
+        Admin admin_reda = new Admin("admin_reda", "password");
+        Admin admin_simona = new Admin("admin_simona", "password123");
+        db.getAdminList().put(admin_reda.getUsername(), admin_reda);
+        db.getAdminList().put(admin_simona.getUsername(), admin_simona);
 
+        //genero utenti
+        User user1 = new User("test", "test", "test1", "test1", LocalDate.of(1996, 01, 01), LocalDate.of(2019, 1, 1), borrowed1);
+        User user3 = new User("test", "test", "test3", "test3", LocalDate.of(1996, 01, 01), LocalDate.of(2018, 1, 1), borrowed2);
+        db.getUserList().put(user1.getUsername(), user1);
+        db.getUserList().put(user3.getUsername(), user3);
+
+        User userRinnovo = new User("test", "test", "rinnovo", "rinnovo", LocalDate.of(1996, 01, 01), LocalDate.of(2014, 04, 18), borrowed_test);
+        db.getUserList().put(userRinnovo.getUsername(), userRinnovo);
+
+        User userScaduto = new User("test", "test", "scaduto", "scaduto", LocalDate.of(1996, 01, 01), LocalDate.of(2012, 02, 03), borrowed_test);
+        db.getUserList().put(userScaduto.getUsername(), userScaduto);
+
+        //genero libri
+        Book book1 = new Book(111, Constant.BOOK, "libro di test 1", langues_test, author_test, 2000, "Romanzo", license_book1, 220, "Giunti");
+        Book book2 = new Book(222, Constant.BOOK, "libro di test 2", langues_test, author_test, 2000, "Romanzo", license_book2, 220, "Giunti");
+        db.getResourceList().put(book1.getBarcode(), book1);
+        db.getResourceList().put(book2.getBarcode(), book2);
+
+        //genero film
+        Film film1 = new Film(333, Constant.FILM, "Film 1", author_test, langues_test, 2001, "horror", license_film1, 18, 125);
+        Film film2 = new Film(444, Constant.FILM, "Film 2", author_test, langues_test, 2003, "horror", license_film2, 18, 139);
+        db.getResourceList().put(film2.getBarcode(), film2);
+        db.getResourceList().put(film1.getBarcode(), film1);
+
+        //genero prestiti
+        Prestito pScaduto = new Prestito(lr.generateId(user1.getUsername(), book1.getBarcode()), user1.getUsername(), book1.getBarcode(), LocalDate.of(2019, 2, 3), LocalDate.of(2019, 3, 3));
+        Prestito p4 = new Prestito(lr.generateId(user1.getUsername(), book2.getBarcode()), user1.getUsername(), book2.getBarcode(), LocalDate.of(2019, 4, 1), LocalDate.of(2019, 5, 1));
+        Prestito p5 = new Prestito(lr.generateId(user3.getUsername(), book1.getBarcode()), user3.getUsername(), book1.getBarcode(), LocalDate.of(2019, 3, 31), LocalDate.of(2019, 4, 30));
+        Prestito p3 = new Prestito(lr.generateId(user3.getUsername(), film1.getBarcode()), user3.getUsername(), film1.getBarcode(), LocalDate.of(2019, 4, 2), LocalDate.of(2019, 5, 2));
+        db.getPrestitoList().put(pScaduto.getCodePrestito(), pScaduto);
+        db.getPrestitoList().put(p3.getCodePrestito(), p3);
+    }
 }

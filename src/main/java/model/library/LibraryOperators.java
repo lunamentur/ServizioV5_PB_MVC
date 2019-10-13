@@ -6,30 +6,33 @@ import main.java.view.ViewLibraryGeneral;
 import java.time.LocalDate;
 
 /**
- * Classe intermedia che permette l'interazione tra la classe Admin-User e la classe Database.
+ * Classe intermedia che permette l'interazione tra la classe Admin-User e la classe db.
  * @author Reda Kassame, Simona Ramazzotti
  * @version 5
  */
 public class LibraryOperators {
 
-	public static LocalDate birthDate;
-	//private static View view=new View();
-	private static int vincolo= 3;
+	public  LocalDate birthDate;
+	//private  View view=new View();
+	private  int vincolo= 3;
+	private Database db;
 
 	/**
 	 * Creazione di variabili e oggetti utili per i metodi di controllo relativi all'User.
 	 */
-	private static String id, username, searchString;
-	private static int year, month, choice, barcode, day, temp;
-	private static long rangeYear=5;
-	private static long rangeDay=-10;
+	private  String id, username, searchString;
+	private  int year, month, choice, barcode, day, temp;
+	private  long rangeYear=5;
+	private  long rangeDay=-10;
 
 	/**
 	 * inizializzazione delle licenze utente.
 	 */
-	private static Integer [] borrowed={0,0};
+	private  Integer [] borrowed={0,0};
 
-
+	public LibraryOperators(Database db){
+		this.db = db;
+	}
 	/**
 	 * METODI CONTROLLO USER
 	 */
@@ -39,7 +42,7 @@ public class LibraryOperators {
 	 * Se si decide di rinnovare l'iscrizione allora viene incrementata l'etichetta del numero del rinnovo (utile per le infomarzioni storiche)
 	 * @param user {@link User}
 	 */
-	public static void renewalRegistration(User user){
+	public  void renewalRegistration(User user){
 		user.setRegistrationDate(LocalDate.now());
 		int temp= user.getNumRenewal()+1;
 		user.setNumRenewal(temp);
@@ -50,7 +53,7 @@ public class LibraryOperators {
 	 * @return true se l'iscrizione dell'user è scaduta, quindi può essere rinnovata.
 	 * @return false se l'iscrizione dell'user non è scaduta e non è nel range dei giorni di rinnovo.
 	 */
-    public static boolean isRenewal(User user) {
+    public  boolean isRenewal(User user) {
 		return user.getRegistrationDate().plusYears(rangeYear).isBefore(LocalDate.now()) && user.getRegistrationDate().plusDays(rangeDay).isBefore(LocalDate.now());
 	}
 
@@ -59,7 +62,7 @@ public class LibraryOperators {
      *
      * @return false se l'iscrizione dell'user non è scaduta.
      */
-    public static boolean isExpired(User user) {
+    public  boolean isExpired(User user) {
         boolean equalYearCondition = user.getRegistrationDate().plusYears(rangeYear).getYear() == LocalDate.now().getYear() && LocalDate.now().isAfter(user.getRegistrationDate().plusYears(rangeYear));
         boolean differentYearCondition = LocalDate.now().getYear() > user.getRegistrationDate().plusYears(rangeYear).getYear();
         if (equalYearCondition || differentYearCondition) {
@@ -72,7 +75,7 @@ public class LibraryOperators {
      * Metodo che se l'utente ha l'iscrizione scaduta, lo contrassegna come scaduto tramite il name e non la chiave primaria username.
      * l'utente sarà costretto registrarsi nuovamente.
      */
-    public static void userExpired(User user) {
+    public  void userExpired(User user) {
         if (isExpired(user)) {
             System.out.println(Constant.SCADUTA_NON_RINNOVABILE);
             user.setName("_expired_");
@@ -84,7 +87,7 @@ public class LibraryOperators {
 	 * @param user {@link User}
 	 * @return true se non puo\' piu\' prendere in prestito altre risorse, false se invece ha ancora disponibili dei prestiti da poter fare.
 	 */
-	public static boolean checkBorrowed(User user, int number){
+	public  boolean checkBorrowed(User user, int number){
 		Integer [] value= user.getBorrowed();
 		return value[number] >= 3;
 	}
@@ -93,26 +96,25 @@ public class LibraryOperators {
 	//DA REVISIONARE
 	/**
 	 * Metodo che raccoglie tutti i metodi per richiedere e verificare la creazione di un prestito.
-	 * {@link LibraryResources#createPrestito(String, String, int,int)}
 	 */
-	public static void createRequestPrestito(int barcode, String username){
+	public  void createRequestPrestito(int barcode, String username){
 		/**
 		 * controllo il tipo della risorsa cercata.
 		 * controllo che l'utente possa effettivamente prendere in prestito una risorsa.
 		 */
 		int bookOrFilm=0;
-		bookOrFilm = Database.choiceTypeResource(barcode);
-		if (!checkBorrowed(Database.getUser(username), bookOrFilm)){
+		bookOrFilm = db.choiceTypeResource(barcode);
+		if (!checkBorrowed(db.getUser(username), bookOrFilm)){
 			/**
 			 * genero il codice del prestito.
 			 */
-			System.out.println(Database.getResource(barcode).toString());
-			String codePrestito = LibraryResources.generateId(username,barcode);
+			System.out.println(db.getResource(barcode).toString());
+			//String codePrestito = LibraryResources.generateId(username,barcode);
 			/**
 			 * creo il prestito e lo salvo nel database, aumentando di uno il numero di licenze dell'utente.
 			 * Avendo già identivicato prima il tipo di risorsa ne modificando quindi il numero associato.
 			 */
-			LibraryResources.createPrestito(codePrestito, username, barcode, bookOrFilm);
+			//LibraryResources.createPrestito(codePrestito, username, barcode, bookOrFilm);
 		} else System.out.println(Constant.FINITE_LICENZE_PRESTITO_USER);
 	}
 
