@@ -53,7 +53,7 @@ public class Controller {
         /**
          * Una volta aperto il database elimina in automatico i prestiti scaduti/terminati.
          */
-        database.removeAutomaticPrestito();
+        //database.removeAutomaticPrestito();
 
         //ora apre il primo menu standard
         menuStandard();
