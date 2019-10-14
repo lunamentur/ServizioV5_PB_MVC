@@ -6,6 +6,7 @@ import main.java.view.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public class ControllerResources {
 
@@ -236,6 +237,18 @@ public class ControllerResources {
     public  void controllerPrintSpecificResource(String type){
         View.viewPrintSpecificResource(type);
         db.printSpecificResource(type);
+    }
+
+    /**
+     * Metodo genera il codice del prestito richiesto dall'utente di una risorsa.
+     * @param barcode {@link #barcode}
+     * @return codice prestito
+     */
+    public String generateId(String username, int barcode){
+        Random random = new Random();
+        String number = String.format("%04d", random.nextInt(10000));
+        String string= username+barcode+number;
+        return string;
     }
 
     /**

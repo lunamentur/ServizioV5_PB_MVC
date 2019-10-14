@@ -234,6 +234,11 @@ public class Controller {
                     case 1:
                         int barcode= ViewLibraryGeneral.insertBarcode(vincolo);
                         if(database.checkIfResource(barcode)){
+                            /**
+                             * determino il tipo di risora (libro o film) e successivamente credo il prestito
+                             */
+                            int type= database.choiceTypeResource(barcode);
+                            cr.createPrestito(cr.generateId(username,barcode),username,barcode,type);
                         } else  System.out.println(Constant.NON_ESISTE_RISORSA);
 
                         break;
