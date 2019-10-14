@@ -586,7 +586,7 @@ public class Database {
             }
         }
         boolean constant;
-        constant= (count==resourceList.size());
+        constant= (count!=resourceList.size());
         return constant;
     }
 

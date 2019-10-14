@@ -238,7 +238,7 @@ public class Controller {
                              * determino il tipo di risora (libro o film) e successivamente credo il prestito
                              */
                             int type= database.choiceTypeResource(barcode);
-                            cr.createPrestito(cr.generateId(username,barcode),username,barcode,type);
+                            lo.createRequestPrestito(barcode,username);
                         } else  System.out.println(Constant.NON_ESISTE_RISORSA);
 
                         break;
