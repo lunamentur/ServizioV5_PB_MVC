@@ -311,10 +311,10 @@ public class Controller {
      * Metodo pannello dell'utente per Iscriversi, Autenticazione, Rinnovo iscrizione e Azioni user.
      */
     public void pannelUser(){
-            view.viewPannelUser();
+
             end2 = false;
             do {
-
+                view.viewPannelUser();
                 choice2 = ViewLibraryGeneral.readInt();
                 switch (choice2) {
 
