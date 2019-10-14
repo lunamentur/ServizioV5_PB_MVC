@@ -20,6 +20,7 @@ public class LibraryOperators {
 	private  int vincolo= 3;
 	private Database db;
 	private ControllerResources cr;
+	private ControllerResources co;
 
 	/**
 	 * Creazione di variabili e oggetti utili per i metodi di controllo relativi all'User.
@@ -113,7 +114,7 @@ public class LibraryOperators {
 			 * genero il codice del prestito.
 			 */
 			System.out.println(db.getResource(barcode).toString());
-			String codePrestito = cr.generateId(username,barcode);
+			String codePrestito = co.generateId(username,barcode);
 			/**
 			 * creo il prestito e lo salvo nel database, aumentando di uno il numero di licenze dell'utente.
 			 * Avendo già identivicato prima il tipo di risorsa ne modificando quindi il numero associato.
