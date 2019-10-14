@@ -1,6 +1,7 @@
 package main.java.model.library;
 import main.java.controller.Controller;
 import main.java.controller.ControllerOperators;
+import main.java.controller.ControllerResources;
 import main.java.model.*;
 import main.java.view.ViewLibraryGeneral;
 
@@ -18,7 +19,7 @@ public class LibraryOperators {
 	//private  View view=new View();
 	private  int vincolo= 3;
 	private Database db;
-	private ControllerOperators co;
+	private ControllerResources cr;
 
 	/**
 	 * Creazione di variabili e oggetti utili per i metodi di controllo relativi all'User.
@@ -112,12 +113,12 @@ public class LibraryOperators {
 			 * genero il codice del prestito.
 			 */
 			System.out.println(db.getResource(barcode).toString());
-			String codePrestito = co.generateId(username,barcode);
+			String codePrestito = cr.generateId(username,barcode);
 			/**
 			 * creo il prestito e lo salvo nel database, aumentando di uno il numero di licenze dell'utente.
 			 * Avendo già identivicato prima il tipo di risorsa ne modificando quindi il numero associato.
 			 */
-			co.createPrestito(codePrestito, username, barcode, bookOrFilm);
+			cr.createPrestito(codePrestito, username, barcode, bookOrFilm);
 		} else System.out.println(Constant.FINITE_LICENZE_PRESTITO_USER);
 	}
 
