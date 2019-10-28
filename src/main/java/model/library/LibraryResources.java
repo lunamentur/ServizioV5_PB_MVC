@@ -17,7 +17,7 @@ import java.util.Random;
  * @version 5
  */
 public class LibraryResources {
-    private Database db;
+    public Database db;
     private Prestito prestito;
     private Resource res;
     private Book book;
@@ -135,15 +135,7 @@ public class LibraryResources {
      * @param barcode {@link #barcode}
      * @return false se il numero delle licenze del prestito &egrave; maggiore o uguale del numero delle copie esistenti, quindi non ci sono piu\' copie disponibili.
      */
-    public boolean checkIfResourceFree(int barcode) {
-        Integer[] copie = db.getResource(barcode).getLicense().clone();
-        /**
-         * {@link #licenseList}
-         * Indice in posizione 0 indica il numero di copie totali
-         * Indice in posizione 1 indica il numero di copie in prestito
-         */
-        return copie[copieinPrestito] < copie[copieRisorsa];
-    }
+
 
 
     /**

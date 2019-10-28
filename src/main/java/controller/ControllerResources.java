@@ -11,6 +11,7 @@ import java.util.*;
 public class ControllerResources {
 
     //////////////////////////////////////////////////////////////////////////////////
+    private  View view =new View();
     private  Prestito prestito;
     private  Resource res;
     private  Book book;
@@ -27,7 +28,7 @@ public class ControllerResources {
      */
     private  String string;
     private Database db;
-    private LibraryResources lr = new LibraryResources(db);
+    private LibraryResources lr;
     private  int choice, year, barcode;
     private  int vincolo=3;
     private  Integer [] licenseList= {0,0};//licenze con due componenti.
@@ -41,6 +42,7 @@ public class ControllerResources {
     //////////////////////////////////////////////////////////////////////////////////
     public ControllerResources(Database db){
         this.db = db;
+        lr = new LibraryResources(db);
     }
     /**
      * Metodo per creare una risorsa e salvarla nel db.
@@ -49,7 +51,7 @@ public class ControllerResources {
      * Si fa la sistinzione tra oggetto di tipo Book e di tipo Film.
      */
     public  void createResourceProcess(){
-        View.stampaRichiestaSingola(Constant.CATEGORIA);
+        view.stampaRichiestaSingola(Constant.CATEGORIA);
         int choice = ViewLibraryGeneral.readIntChoise(1,2);
         //vero se e\' un libro, oppure un film
         if (choice == 1) string = Constant.BOOK;
@@ -65,7 +67,7 @@ public class ControllerResources {
                 case 1:
                     Book book = new Book(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(Constant.NUM_PAG), ViewLibraryGeneral.insertString(Constant.CASA_EDIT));
                     db.insertResource(book);
-                    View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+                    view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
                     break;
                 /**
                  * Creazione di una risorsa di tipo Film.
@@ -73,17 +75,17 @@ public class ControllerResources {
                 case 2:
                     Film film = new Film(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(Constant.AGE_RESTRIC), ViewLibraryGeneral.insertNum(Constant.DURATA));
                     db.insertResource(film);
-                    View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+                    view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
                     break;
 
                 /**
                  * Errore, l'inserimento non &egrave; corretto
                  */
                 default:
-                    View.viewMsgError();
+                    view.viewMsgError();
                     break;
             }
-        } else View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+        } else view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
 
     }
 
@@ -98,7 +100,7 @@ public class ControllerResources {
          * controllo se esiste la risorsa e se &egrave; disponibile al prestito.
          */
         if(db.checkIfResource(barcode)){
-            if(lr.checkIfResourceFree(barcode)){
+            if(checkIfResourceFree(barcode)){
                 /**
                  * Aumento di uno le copie in prestito, ovvero le licenze, in posizione 1 nell'array.
                  */
@@ -114,9 +116,18 @@ public class ControllerResources {
                  */
                 db.insertPrestito(prestito);
                 db.incrementLicenzeUser(username, bookOrFilm);
-                View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
-            } else View.stampaRichiestaSingola(Constant.MG_PRESTITO_NON_DISPONIBILE);
-        } else View.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
+                view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+            } else view.stampaRichiestaSingola(Constant.MG_PRESTITO_NON_DISPONIBILE);
+        } else view.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
+    }
+    public boolean checkIfResourceFree(int barcode) {
+        Integer[] copie = db.getResource(barcode).getLicense();
+        /**
+         * {@link #licenseList}
+         * Indice in posizione 0 indica il numero di copie totali
+         * Indice in posizione 1 indica il numero di copie in prestito
+         */
+        return copie[copieinPrestito] < copie[copieRisorsa];
     }
 
     /**
@@ -172,14 +183,14 @@ public class ControllerResources {
                  * Errore, l'inserimento non è corretto
                  */
                 default:
-                    System.out.println(View.MG_ERRORE);
+                    System.out.println(view.MG_ERRORE);
                     break;
             }
             /**
              * se nessuna risorsa viene trovata allora compare il messaggio di avviso.
              */
             if (!exist) //se true diventa false, ovvero se sono uguali significa che non c'e risorsa
-                View.stampaRichiestaSingola(View.NON_ESISTE_RISORSA);
+                view.stampaRichiestaSingola(view.NON_ESISTE_RISORSA);
         }while(!end);
     }
 
@@ -192,7 +203,7 @@ public class ControllerResources {
     public  String checkInsertId(String username){
         boolean end = false;
         while(!end){
-            View.stampaRichiestaSingola(Constant.CODICE_PRESTITO);
+            view.stampaRichiestaSingola(Constant.CODICE_PRESTITO);
             try {
                 string= ViewLibraryGeneral.readString();
             } catch (Exception e) {
@@ -213,8 +224,8 @@ public class ControllerResources {
          */
         if(lr.checkProrogaPrestito(codePrestito)){
             lr.prorogaPrestito(codePrestito);
-            View.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
-        } else View.stampaRichiestaSingola(Constant.NO_PROROGA);
+            view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+        } else view.stampaRichiestaSingola(Constant.NO_PROROGA);
     }
 
     /**
@@ -235,7 +246,7 @@ public class ControllerResources {
      * Metodo per stampare a video le risorse del database
      */
     public  void controllerPrintSpecificResource(String type){
-        View.viewPrintSpecificResource(type);
+        view.viewPrintSpecificResource(type);
         db.printSpecificResource(type);
     }
 
@@ -277,7 +288,7 @@ public class ControllerResources {
                     System.out.println(Constant.RISORSA_SCADUTA);
                 }
             } else System.out.println(Constant.RISORSA_IMPOSSIBILE_RIMUOVERE);
-        } else View.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
+        } else view.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
     }
     public void initAllObject() {
         Integer[] borrowed_test = {0, 0};

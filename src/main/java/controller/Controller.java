@@ -238,7 +238,7 @@ public class Controller {
                              * determino il tipo di risora (libro o film) e successivamente credo il prestito
                              */
                             int type= database.choiceTypeResource(barcode);
-                            lo.createRequestPrestito(barcode,username);
+                            createRequestPrestito(barcode,username);
                         } else  System.out.println(Constant.NON_ESISTE_RISORSA);
 
                         break;
@@ -378,6 +378,26 @@ public class Controller {
             } while (!end2);
             System.out.println(View.FINE_MENU);
         }
+    public  void createRequestPrestito(int barcode, String username){
+        /**
+         * controllo il tipo della risorsa cercata.
+         * controllo che l'utente possa effettivamente prendere in prestito una risorsa.
+         */
+        int bookOrFilm=0;
+        bookOrFilm = database.choiceTypeResource(barcode);
+        if (!co.checkBorrowed(database.getUser(username), bookOrFilm)){
+            /**
+             * genero il codice del prestito.
+             */
+            System.out.println(database.getResource(barcode).toString());
+            String codePrestito = cr.generateId(username,barcode);
+            /**
+             * creo il prestito e lo salvo nel database, aumentando di uno il numero di licenze dell'utente.
+             * Avendo già identivicato prima il tipo di risorsa ne modificando quindi il numero associato.
+             */
+            cr.createPrestito(codePrestito, username, barcode, bookOrFilm);
+        } else System.out.println(Constant.FINITE_LICENZE_PRESTITO_USER);
+    }
 
 
 }

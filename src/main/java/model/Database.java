@@ -164,7 +164,7 @@ public class Database {
      * Lista di risorse, oggetti di tipo Resource, con key barcode di tipo Int.
      * Mediante l'utilizzo di tale HashMap siamo in grado di collegare ogni risorsa (con i relativi campi di informazioni) con una key, ovvero il barcode.
      */
-     Map<Integer, Resource> resourceList= new HashMap<>();
+
 
 
     /**
@@ -173,7 +173,7 @@ public class Database {
      * @return Resource
      */
     public  Resource getResource(int barcode){
-        return resourceList.get(barcode);
+        return getResourceList().get(barcode);
     }
 
     /**
@@ -181,7 +181,7 @@ public class Database {
      * @return true se la risorsa e\' presente, altrimenti false.
      */
     public  boolean checkIfResource(int barcode){
-        return resourceList.containsKey(barcode);
+        return getResourceList().containsKey(barcode);
     }
 
     /**
@@ -294,6 +294,8 @@ public class Database {
      Map< String, Prestito> prestitoList= new HashMap<>();
 
      Map<String, Prestito> prestitoListForIteration = new HashMap<>();
+
+     Map<Integer, Resource> resourceList= new HashMap<>();
 
 
 
@@ -543,9 +545,9 @@ public class Database {
      * @param type stringa che permette di selezionare il tipo di ricerca da svolgere.
      * @param txt stringa che deve essere ricercata all'interno dell'archivio delle risorse.
      */
-    public  boolean searchGeneral(String txt, String type){
+    public  boolean searchGeneral(String type,String txt){
         count=0;
-        for(Resource resource : resourceList.values()){
+        for(Resource resource : getResourceList().values()){
             switch(type) {
                 case "title":
                     if(resource.getTitle().equalsIgnoreCase(txt)){

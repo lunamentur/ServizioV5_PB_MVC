@@ -102,26 +102,7 @@ public class LibraryOperators {
 	/**
 	 * Metodo che raccoglie tutti i metodi per richiedere e verificare la creazione di un prestito.
 	 */
-	public  void createRequestPrestito(int barcode, String username){
-		/**
-		 * controllo il tipo della risorsa cercata.
-		 * controllo che l'utente possa effettivamente prendere in prestito una risorsa.
-		 */
-		int bookOrFilm=0;
-		bookOrFilm = db.choiceTypeResource(barcode);
-		if (!checkBorrowed(db.getUser(username), bookOrFilm)){
-			/**
-			 * genero il codice del prestito.
-			 */
-			System.out.println(db.getResource(barcode).toString());
-			String codePrestito = co.generateId(username,barcode);
-			/**
-			 * creo il prestito e lo salvo nel database, aumentando di uno il numero di licenze dell'utente.
-			 * Avendo già identivicato prima il tipo di risorsa ne modificando quindi il numero associato.
-			 */
-			cr.createPrestito(codePrestito, username, barcode, bookOrFilm);
-		} else System.out.println(Constant.FINITE_LICENZE_PRESTITO_USER);
-	}
+
 
 
 }

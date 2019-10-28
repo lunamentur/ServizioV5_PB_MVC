@@ -111,6 +111,10 @@ public class ControllerOperators {
      * Prende da tastiera anno, mese e giorno e crea una data di tipo LocalDate.
      * @return birthDate
      */
+
+    public  boolean checkBorrowed(User user, int number){
+       return lo.checkBorrowed(user,number);
+    }
     public  void userExpired(User user) {
         lo.userExpired(user);
     }
