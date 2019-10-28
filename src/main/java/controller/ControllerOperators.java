@@ -89,6 +89,7 @@ public class ControllerOperators {
         }
     }
 
+    //DA METTERE NEL MENUSTANDARD INIZIALE L'OPZIONE 666
     /**
      * Metodo che permette la registrazione di un nuovo admin.
      * Controlla preventivamente se l'username inserito &egrave; gi&agrave; esistente.
@@ -142,6 +143,7 @@ public class ControllerOperators {
         return birthDate;
     }
 
+    //PERCHE NON VIENE MAI USATO?
     /**
      * Metodo che permette di visualizzare i prestiti attivi di un utente.
      * Controllo percio\' che il prestito sia attivo, ovvero l'etichetta on_off sia true, altrimenti se false significa che e\' scaduto.

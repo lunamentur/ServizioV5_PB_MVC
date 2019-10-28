@@ -139,7 +139,11 @@ public class Resource implements Serializable {
                 " , " + genre +
                 " , " + langues +
                 " , " + yearPub +
-                " , " + license;
+                " , " + toStringLicense();
+    }
+
+    public String toStringLicense(){
+        return "( copie totali: "+ license[0] + " , copie in prestito: "+ license[1] +" )";
     }
 
 }
