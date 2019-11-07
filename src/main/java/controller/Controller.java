@@ -2,7 +2,6 @@ package main.java.controller;
 import main.java.model.*;
 import main.java.model.library.LibraryOperators;
 import main.java.model.library.LibraryResources;
-import main.java.view.ViewLibraryGeneral;
 import main.java.view.*;
 
 /**

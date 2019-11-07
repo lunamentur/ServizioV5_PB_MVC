@@ -98,6 +98,9 @@ public class User extends Admin implements Serializable {
         return " || prestiti libri: " + borrowed[prestitoBook] + "  prestiti film: " + borrowed[prestitoFilm];
     }
 
+    /**
+     * Metodo tostring() di stampa dati della classe.
+     */
     @Override
     public String toString() {
         return "  {" +
@@ -106,14 +109,5 @@ public class User extends Admin implements Serializable {
                 ", birthDate: " + birthDate +
                 ", registrationDate:  " + registrationDate + borrowedToString() +
                 "  }";
-    }
-    public boolean checkIf18(){
-        LocalDate now = LocalDate.now();
-        int age = Period.between(this.birthDate,now).getYears();
-        if(age>=18){
-            return true;
-        }else{
-            return false;
-        }
     }
 }

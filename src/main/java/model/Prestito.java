@@ -63,10 +63,6 @@ public class Prestito implements Serializable {
         return codePrestito;
     }
 
-    public void setCodePrestito(String codePrestito) {
-        this.codePrestito = codePrestito;
-    }
-
     public LocalDate getDataInizio() {
         return dataInizio;
     }
