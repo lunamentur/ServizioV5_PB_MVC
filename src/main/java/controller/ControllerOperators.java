@@ -18,7 +18,7 @@ public class ControllerOperators {
     /**
      * Creazione di variabili e oggetti utili per i metodi di controllo relativi all'User.
      */
-    private  String id, username, searchString;
+    private  String id, username;
     private  int year, month, choice, barcode, day, temp;
     private  long rangeYear=5;
     private  long rangeDay=-10;
@@ -27,6 +27,10 @@ public class ControllerOperators {
      * inizializzazione delle licenze utente.
      */
     private  Integer [] borrowed={0,0};
+
+    /**
+     * costruttore della classe
+     */
     public ControllerOperators(Database db){
         this.db = db;
     }
@@ -56,7 +60,6 @@ public class ControllerOperators {
         }
         return username;
     }
-
 
 
     /**
@@ -107,18 +110,16 @@ public class ControllerOperators {
         } while (!end);
     }
 
+
+    public  void userExpired(User user) {
+        lo.userExpired(user);
+    }
+
     /**
      * Medoto per inserire la data di nascita, di tipo LocalDate, dell'user.
      * Prende da tastiera anno, mese e giorno e crea una data di tipo LocalDate.
      * @return birthDate
      */
-
-    public  boolean checkBorrowed(User user, int number){
-       return lo.checkBorrowed(user,number);
-    }
-    public  void userExpired(User user) {
-        lo.userExpired(user);
-    }
     public  LocalDate insertDate(){
         boolean end= false;
         view.stampaRichiestaSingola(Constant.DATA_NASCITA);
@@ -131,7 +132,7 @@ public class ControllerOperators {
                 month= vlg.readInt();
                 view.stampaRichiestaSingola(Constant.DAY);
                 day= vlg.readInt();
-                if((String.valueOf(month).length()<=2 && month <= 12 ) && (( String.valueOf(day).length() <= 2) && day <= 31)) {
+                if(lo.trueDate(month,day)) {
                     birthDate= LocalDate.of(year,month,day);
                     end=true;
                 }
@@ -142,27 +143,4 @@ public class ControllerOperators {
         }
         return birthDate;
     }
-
-    //PERCHE NON VIENE MAI USATO?
-    /**
-     * Metodo che permette di visualizzare i prestiti attivi di un utente.
-     * Controllo percio\' che il prestito sia attivo, ovvero l'etichetta on_off sia true, altrimenti se false significa che e\' scaduto.
-     */
-    public  void printActivePrestitiUser(String username){
-        int count=0;
-        for (Map.Entry<String, Prestito> entry : db.getPrestitoList().entrySet()) {
-            if(entry.getValue().getUsername().equals(username) && entry.getValue().getOn_off()){
-                System.out.println("Idprestito: "+entry.getValue().getCodePrestito()+ "\t Risorsa: "+db.getResourceList().get(entry.getValue().getBarcode()).getTitle());
-            } else count++;
-        }
-        /**
-         * se non ha nessun prestito attivo allora viene stampato a video un messaggio di avviso.
-         */
-        if(count== db.getPrestitoList().size()){
-            System.out.println(Constant.USER_NON_HA_PRESTITI);
-        }
-    }
-
-
-
 }

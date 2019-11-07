@@ -1,13 +1,9 @@
 package main.java.model;
-import main.java.model.library.LibraryResources;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -159,13 +155,6 @@ public class Database {
     /**
      * METODI RESOURCE
      */
-
-    /**
-     * Lista di risorse, oggetti di tipo Resource, con key barcode di tipo Int.
-     * Mediante l'utilizzo di tale HashMap siamo in grado di collegare ogni risorsa (con i relativi campi di informazioni) con una key, ovvero il barcode.
-     */
-
-
 
     /**
      * Metodo che ritorna la risorsa, oggetto di tipo Resource, preso dal Database.
@@ -384,7 +373,6 @@ public class Database {
         return prestitoList.get(codePrestito);
     }
 
-    //DA DIVIDERE E METTERE NELLA VIEW E CONTROLLER
     /**
      * Metodo che permette di visualizzare i prestiti attivi di un utente.
      * Controllo percio\' che il prestito sia attivo, ovvero l'etichetta on_off sia true, altrimenti se false significa che e\' scaduto.
@@ -420,7 +408,6 @@ public class Database {
      * METODI PER NUMERO DI PRESTITI PER ANNO SOLARE E USER.
      */
 
-    //BISOGNEREBBE LA STAMPA METTERLA NELLA VIEW E UN PEZZO DEL CONTROLLER
     /**
      * Metodo che permette di visualizzare a video il numero di prestiti per anno solare da parte di un utente.
      * Viene utilizzata inizialmente la lista di user per ricercare nella lista prestiti il nome utente.
@@ -478,7 +465,6 @@ public class Database {
         System.out.println(year + " : " + count);
     }
 
-    //BISOGNEREBBE LA STAMPA METTERLA NELLA VIEW E UN PEZZO DEL CONTROLLER
     /**
      * Metodo che restituisce quale risorsa, oggetto di tipo Resource, ha avuto il maggior numero di prestiti per anno solare.
      */
@@ -538,7 +524,6 @@ public class Database {
      * METODI PER LA RICERCA DI RISORSE, UTILIZZATA DALL'USER E DALL'ADMIN.
      */
 
-    //BISOGNEREBBE LA STAMPA METTERLA NELLA VIEW E UN PEZZO DEL CONTROLLER
     /**
      * Metodo per la ricerca di una risorsa tramite dei parametri generici.
      * Se la stringa viene trovata allora vengono stampati a video alcuni parametri essenziali della risorsa cercata.
@@ -591,15 +576,6 @@ public class Database {
         constant= (count!=resourceList.size());
         return constant;
     }
-
-    /**
-     * INIZIALIZZAZIONE DI OGGETTI PREDEFINITI
-     */
-
-
-    /**
-     * Creazione di oggetti preimpostati.
-     */
 
 
     /**

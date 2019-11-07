@@ -1,6 +1,5 @@
 package main.java.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,23 +33,15 @@ public class Film extends Resource {
     }
 
     /**
-     * Metodi GET & SET della classe Film.
+     * toString()
      */
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public int getAgeRestriction() {
-        return ageRestriction;
-    }
-
-    public void setAgeRestriction(int ageRestriction) {
-        this.ageRestriction = ageRestriction;
+    @Override
+    public String toString() {
+        return "| | CATEGORIA= '" + type + '\'' + " | titolo= '" + title + '\'' +
+                " | barcode=  " + barcode +
+                " |  anno di pubblicazione= " + yearPub +
+                " |  autore= " + author +  " |  vietata al di sotto di anni: " + ageRestriction +
+                "| | ";
     }
 
 }

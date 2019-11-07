@@ -53,24 +53,22 @@ public class Controller {
         /**
          * Una volta aperto il database elimina in automatico i prestiti scaduti/terminati.
          */
-        //database.removeAutomaticPrestito();
+        database.removeAutomaticPrestito();
 
         //ora apre il primo menu standard
         menuStandard();
         //fine del menu e del programma
+        /**
+         * salva tutte le modifiche fatte.
+         */
+        database.saveAllHash(View.FILE_ADMIN);
+        database.saveAllHash(View.FILE_USER);
+        database.saveAllHash(View.FILE_PRESTITO);
+        database.saveAllHash(View.FILE_RESOURCE);
+
         System.out.println(Constant.FINE_MENU);
     }
 
-
-    //serve? davvero?
-    public void login(){
-        //inserire il nome e la pass
-        //controllo autenticazione
-        //rinvio a menù User opure menu action Admin
-
-        //nota bene: tutto nella LibraryOperat e ControllerOp
-
-    }
 
     /**
      * Menu d'apertura del programma

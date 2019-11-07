@@ -13,11 +13,7 @@ public class ControllerResources {
     //////////////////////////////////////////////////////////////////////////////////
     private  View view =new View();
     private  Prestito prestito;
-    private  Resource res;
-    private  Book book;
-    private  Film film;
     public  LocalDate dataInizio, dataScadenza;
-    private  int giorniIntervalloProroga=3;
     /**
      * la durata massima, in numero di giorni, del prestito di una qualsiasi risorsa di tipo Book.
      */
@@ -29,7 +25,7 @@ public class ControllerResources {
     private  String string;
     private Database db;
     private LibraryResources lr;
-    private  int choice, year, barcode;
+    private  int barcode;
     private  int vincolo=3;
     private  Integer [] licenseList= {0,0};//licenze con due componenti.
 
@@ -39,7 +35,11 @@ public class ControllerResources {
      */
     private  int copieRisorsa = 0;
     private  int copieinPrestito = 1;
-    //////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Costruttore
+     * @param db database
+     */
     public ControllerResources(Database db){
         this.db = db;
         lr = new LibraryResources(db);
@@ -100,7 +100,7 @@ public class ControllerResources {
          * controllo se esiste la risorsa e se &egrave; disponibile al prestito.
          */
         if(db.checkIfResource(barcode)){
-            if(checkIfResourceFree(barcode)){
+            if(lr.checkIfResourceFree(barcode)){
                 /**
                  * Aumento di uno le copie in prestito, ovvero le licenze, in posizione 1 nell'array.
                  */
@@ -120,15 +120,8 @@ public class ControllerResources {
             } else view.stampaRichiestaSingola(Constant.MG_PRESTITO_NON_DISPONIBILE);
         } else view.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
     }
-    public boolean checkIfResourceFree(int barcode) {
-        Integer[] copie = db.getResource(barcode).getLicense();
-        /**
-         * {@link #licenseList}
-         * Indice in posizione 0 indica il numero di copie totali
-         * Indice in posizione 1 indica il numero di copie in prestito
-         */
-        return copie[copieinPrestito] < copie[copieRisorsa];
-    }
+
+
 
     /**
      * Gestione della ricerca di risorse dati in ingresso dei parametri.

@@ -1,6 +1,5 @@
 package main.java.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,22 +41,15 @@ public class Book extends Resource {
 
 
     /**
-     * Get and Set
+     * toString()
      */
-
-    public int getNumPage() {
-        return numPage;
+    @Override
+    public String toString() {
+        return "| | CATEGORIA= '" + type + '\'' + " | titolo= '" + title + '\'' +
+                " | barcode=  " + barcode +
+                " |  anno di pubblicazione= " + yearPub +
+                " |  autore= " + author +  " |  casa editrice= " + casaEdit +
+                "| | ";
     }
 
-    public void setNumPage(int numPage) {
-        this.numPage = numPage;
-    }
-
-    public String getCasaEdit() {
-        return casaEdit;
-    }
-
-    public void setCasaEdit(String casaEdit) {
-        this.casaEdit = casaEdit;
-    }
 }

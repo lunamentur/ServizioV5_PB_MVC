@@ -14,10 +14,6 @@ import java.time.LocalDate;
  * @version 5
  */
 public class LibraryOperators {
-
-	public  LocalDate birthDate;
-	//private  View view=new View();
-	private  int vincolo= 3;
 	private Database db;
 	private ControllerResources cr;
 	private ControllerResources co;
@@ -25,16 +21,13 @@ public class LibraryOperators {
 	/**
 	 * Creazione di variabili e oggetti utili per i metodi di controllo relativi all'User.
 	 */
-	private  String id, username, searchString;
-	private  int year, month, choice, barcode, day, temp;
 	private  long rangeYear=5;
 	private  long rangeDay=-10;
 
 	/**
-	 * inizializzazione delle licenze utente.
+	 * Costruttore
+	 * @param db database
 	 */
-	private  Integer [] borrowed={0,0};
-
 	public LibraryOperators(Database db){
 		this.db = db;
 	}
@@ -92,13 +85,11 @@ public class LibraryOperators {
 	 * @param user {@link User}
 	 * @return true se non puo\' piu\' prendere in prestito altre risorse, false se invece ha ancora disponibili dei prestiti da poter fare.
 	 */
-	public  boolean checkBorrowed(User user, int number){
+	private boolean checkBorrowed(User user, int number){
 		Integer [] value= user.getBorrowed();
 		return value[number] >= 3;
 	}
 
-
-	//DA REVISIONARE
 	/**
 	 * Metodo che raccoglie tutti i metodi per richiedere e verificare la creazione di un prestito.
 	 */
@@ -123,5 +114,15 @@ public class LibraryOperators {
 		} else System.out.println(Constant.FINITE_LICENZE_PRESTITO_USER);
 	}
 
+	/**
+	 * Data corretta per l'inserimento.
+	 */
+	public boolean trueDate(int month, int day) {
+		boolean corretta=false;
+		if((String.valueOf(month).length()<=2 && month <= 12 ) && (( String.valueOf(day).length() <= 2) && day <= 31)) {
+			corretta=true;
+		}
+		return corretta;
+	}
 
 }

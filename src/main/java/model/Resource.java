@@ -57,16 +57,8 @@ public class Resource implements Serializable {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getGenre() {
         return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
 
     public int getBarcode() {
@@ -81,16 +73,8 @@ public class Resource implements Serializable {
         return yearPub;
     }
 
-    public void setYearPub(int yearPub) {
-        this.yearPub = yearPub;
-    }
-
     public List<String> getLangues() {
         return langues;
-    }
-
-    public void setLangues(List<String> langues) {
-        this.langues = langues;
     }
 
     public List<String> getAuthor() {
@@ -113,10 +97,6 @@ public class Resource implements Serializable {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
 
     @Override
     public String toString() {
@@ -129,7 +109,6 @@ public class Resource implements Serializable {
 
     /**
      * Metodo toString() rivisitato e utilizzato per la stampa nel menu admin.
-     *
      * @return elenco dei parametri della risorsa in stringa.
      */
     public String toStringRes() {
@@ -144,6 +123,10 @@ public class Resource implements Serializable {
 
     public String toStringLicense(){
         return "( copie totali: "+ license[0] + " , copie in prestito: "+ license[1] +" )";
+    }
+
+    private void metodoCrea(){
+
     }
 
 }

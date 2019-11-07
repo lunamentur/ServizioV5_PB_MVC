@@ -1,13 +1,9 @@
 package main.java.model.library;
 
 import main.java.model.*;
-import main.java.view.ViewLibraryGeneral;
 
 
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
@@ -18,10 +14,6 @@ import java.util.Random;
  */
 public class LibraryResources {
     public Database db;
-    private Prestito prestito;
-    private Resource res;
-    private Book book;
-    private Film film;
     public LocalDate dataInizio, dataScadenza;
     private int giorniIntervalloProroga = 3;
     /**
@@ -34,9 +26,6 @@ public class LibraryResources {
      * Creazione di variabili e oggetti utili per i metodi di controllo.
      */
     private String string;
-    private int choice, year, barcode;
-    private int vincolo = 3;
-    private Integer[] licenseList = {0, 0};//licenze con due componenti.
 
     /**
      * variabili che corrispondono agli indici della lista di licenze.
@@ -130,15 +119,6 @@ public class LibraryResources {
     }
 
     /**
-     * Metodo che permette di controllare se una risorsa, oggetto di tipo Resource, &egrave; disponibile al prestito.
-     *
-     * @param barcode {@link #barcode}
-     * @return false se il numero delle licenze del prestito &egrave; maggiore o uguale del numero delle copie esistenti, quindi non ci sono piu\' copie disponibili.
-     */
-
-
-
-    /**
      * Metodo genera il codice del prestito richiesto dall'utente di una risorsa.
      *
      * @param barcode {@link #barcode}
@@ -152,15 +132,17 @@ public class LibraryResources {
     }
 
     /**
-     * Metodo che controlla se il codice prestito e\' unico, ovvero non sia gia\' presente nel db.
-     *
-     * @param barcode {@link #barcode}
-     * @return codice prestito
+     * Metodo che controlla se la risorsa &egrave libera.
+     * @param barcode
+     * @return true or false
      */
-    public String checkGenerateId(String username, int barcode) {
-        do {
-            string = generateId(username, barcode);
-        } while (db.checkIfPrestito(string));
-        return string;
+    public boolean checkIfResourceFree(int barcode) {
+        Integer[] copie = db.getResource(barcode).getLicense();
+        /**
+         * {@link #licenseList}
+         * Indice in posizione 0 indica il numero di copie totali
+         * Indice in posizione 1 indica il numero di copie in prestito
+         */
+        return copie[copieinPrestito] < copie[copieRisorsa];
     }
 }
