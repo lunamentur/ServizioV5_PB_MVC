@@ -13,15 +13,12 @@ public class ControllerOperators {
     private Database db;
     private LibraryOperators lo = new LibraryOperators(db);
     private ViewLibraryGeneral vlg = new ViewLibraryGeneral(); 
-    private  int vincolo= 3;
 
     /**
      * Creazione di variabili e oggetti utili per i metodi di controllo relativi all'User.
      */
-    private  String id, username;
-    private  int year, month, choice, barcode, day, temp;
-    private  long rangeYear=5;
-    private  long rangeDay=-10;
+    private  String username;
+    private  int year, month, day;
 
     /**
      * inizializzazione delle licenze utente.
@@ -36,8 +33,11 @@ public class ControllerOperators {
     }
 
 
+    /**
+     * metodo che gestisce il rinnovo della registrazione utente usando i metodi che si trovano nel model.
+     * @param user utente, fruitore.
+     */
     public  void controllerRenewalRegistration(User user) {
-        int temp=0;
         if (lo.isRenewal(user)) {
             view.viewRenewalRegistrazion();
             int choice = vlg.readInt();
@@ -70,9 +70,9 @@ public class ControllerOperators {
     public  String insertUserName(){
         boolean end=false;
         do{
-            username= vlg.insertString(Constant.USER_NAME);
+            username= vlg.insertString(view.USER_NAME);
             if(db.checkIfUser(username)){
-                view.stampaRichiestaSingola(Constant.USERNAME_ESISTE);
+                view.stampaRichiestaSingola(view.USERNAME_ESISTE);
             }else end=true;
         }while(!end);
         return username;
@@ -83,7 +83,7 @@ public class ControllerOperators {
      * oggetto di tipo User, all'interno del db.
      */
     public  boolean registrationProcess(){
-        User user = new User(vlg.insertString(Constant.NOME), vlg.insertString(Constant.COGNOME), insertUserName(), vlg.insertString(Constant.PASSWORD), insertDate(), LocalDate.now(), borrowed);
+        User user = new User(vlg.insertString(view.NOME), vlg.insertString(view.COGNOME), insertUserName(), vlg.insertString(view.PASSWORD), insertDate(), LocalDate.now(), borrowed);
         if (db.checkIf18(user.getBirthDate())) {
             db.insertUser(user);
             return true;
@@ -111,6 +111,7 @@ public class ControllerOperators {
     }
 
 
+    //questo? a cosa serve?
     public  void userExpired(User user) {
         lo.userExpired(user);
     }

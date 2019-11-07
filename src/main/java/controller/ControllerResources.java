@@ -10,7 +10,6 @@ import java.util.*;
 
 public class ControllerResources {
 
-    //////////////////////////////////////////////////////////////////////////////////
     private  View view =new View();
     private  Prestito prestito;
     public  LocalDate dataInizio, dataScadenza;
