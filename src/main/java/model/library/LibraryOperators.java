@@ -1,9 +1,6 @@
 package main.java.model.library;
-import main.java.controller.Controller;
-import main.java.controller.ControllerOperators;
 import main.java.controller.ControllerResources;
 import main.java.model.*;
-import main.java.view.ViewLibraryGeneral;
 
 
 import java.time.LocalDate;

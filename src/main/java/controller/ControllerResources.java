@@ -55,11 +55,11 @@ public class ControllerResources {
      * Si fa la sistinzione tra oggetto di tipo Book e di tipo Film.
      */
     public  void createResourceProcess(){
-        view.stampaRichiestaSingola(Constant.CATEGORIA);
+        View.stampaRichiestaSingola(View.CATEGORIA);
         int choice = ViewLibraryGeneral.readIntChoise(1,2);
         //vero se e\' un libro, oppure un film
-        if (choice == 1) string = Constant.BOOK;
-        else string = Constant.FILM;
+        if (choice == 1) string = View.BOOK;
+        else string = View.FILM;
         barcode= ViewLibraryGeneral.insertBarcode(vincolo);
         if(!lr.checkIfExist(barcode)){
             Resource res= createResource(barcode, string);
@@ -69,27 +69,27 @@ public class ControllerResources {
                  * Creazione di una risorsa di tipo Book.
                  */
                 case 1:
-                    Book book = new Book(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(Constant.NUM_PAG), ViewLibraryGeneral.insertString(Constant.CASA_EDIT));
+                    Book book = new Book(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(View.NUM_PAG), ViewLibraryGeneral.insertString(View.CASA_EDIT));
                     db.insertResource(book);
-                    view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+                    View.stampaRichiestaSingola(View.MG_AZIONE_SUCCESSO);
                     break;
                 /**
                  * Creazione di una risorsa di tipo Film.
                  */
                 case 2:
-                    Film film = new Film(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(Constant.AGE_RESTRIC), ViewLibraryGeneral.insertNum(Constant.DURATA));
+                    Film film = new Film(res.getBarcode(), string, res.getTitle(), res.getAuthor(), res.getLangues(), res.getYearPub(), res.getGenre(), licenseList, ViewLibraryGeneral.insertNum(View.AGE_RESTRIC), ViewLibraryGeneral.insertNum(View.DURATA));
                     db.insertResource(film);
-                    view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+                    View.stampaRichiestaSingola(View.MG_AZIONE_SUCCESSO);
                     break;
 
                 /**
                  * Errore, l'inserimento non &egrave; corretto
                  */
                 default:
-                    view.viewMsgError();
+                    View.viewMsgError();
                     break;
             }
-        } else view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
+        } else View.stampaRichiestaSingola(View.MG_AZIONE_SUCCESSO);
 
     }
 
@@ -120,9 +120,9 @@ public class ControllerResources {
                  */
                 db.insertPrestito(prestito);
                 db.incrementLicenzeUser(username, bookOrFilm);
-                view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
-            } else view.stampaRichiestaSingola(Constant.MG_PRESTITO_NON_DISPONIBILE);
-        } else view.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
+                View.stampaRichiestaSingola(View.MG_AZIONE_SUCCESSO);
+            } else View.stampaRichiestaSingola(View.MG_PRESTITO_NON_DISPONIBILE);
+        } else View.stampaRichiestaSingola(View.NON_ESISTE_RISORSA);
     }
 
 
@@ -180,14 +180,14 @@ public class ControllerResources {
                  * Errore, l'inserimento non è corretto
                  */
                 default:
-                    System.out.println(view.MG_ERRORE);
+                    System.out.println(View.MG_ERRORE);
                     break;
             }
             /**
              * se nessuna risorsa viene trovata allora compare il messaggio di avviso.
              */
             if (!exist) //se true diventa false, ovvero se sono uguali significa che non c'e risorsa
-                view.stampaRichiestaSingola(view.NON_ESISTE_RISORSA);
+                View.stampaRichiestaSingola(View.NON_ESISTE_RISORSA);
         }while(!end);
     }
 
@@ -200,7 +200,7 @@ public class ControllerResources {
     public  String checkInsertId(String username){
         boolean end = false;
         while(!end){
-            view.stampaRichiestaSingola(Constant.CODICE_PRESTITO);
+            View.stampaRichiestaSingola(View.CODICE_PRESTITO);
             try {
                 string= ViewLibraryGeneral.readString();
             } catch (Exception e) {
@@ -208,7 +208,7 @@ public class ControllerResources {
             }
             if(db.checkIfPrestito(string) && string.contains(username)){
                 end=true;
-            } else System.out.println(Constant.NON_ESISTE_PRESTITO);
+            } else System.out.println(View.NON_ESISTE_PRESTITO);
         }
         return string;
     }
@@ -221,8 +221,8 @@ public class ControllerResources {
          */
         if(lr.checkProrogaPrestito(codePrestito)){
             lr.prorogaPrestito(codePrestito);
-            view.stampaRichiestaSingola(Constant.MG_AZIONE_SUCCESSO);
-        } else view.stampaRichiestaSingola(Constant.NO_PROROGA);
+            View.stampaRichiestaSingola(View.MG_AZIONE_SUCCESSO);
+        } else View.stampaRichiestaSingola(View.NO_PROROGA);
     }
 
     /**
@@ -232,10 +232,10 @@ public class ControllerResources {
      * @return oggetto di tipo Resource.
      */
     public  Resource createResource(int barcode, String type){
-        String title = ViewLibraryGeneral.insertString(Constant.TITLE);
-        List ll = ViewLibraryGeneral.insertList(Constant.AUTORI);
-        List lingue = ViewLibraryGeneral.insertList(Constant.LINGUE);
-        Resource res = new Resource(barcode, type, title, ll, lingue, ViewLibraryGeneral.insertNumberEqual(Constant.YEAR, 4), ViewLibraryGeneral.insertString(Constant.GENERE), licenseList);
+        String title = ViewLibraryGeneral.insertString(View.TITLE);
+        List ll = ViewLibraryGeneral.insertList(View.AUTORI);
+        List lingue = ViewLibraryGeneral.insertList(View.LINGUE);
+        Resource res = new Resource(barcode, type, title, ll, lingue, ViewLibraryGeneral.insertNumberEqual(View.YEAR, 4), ViewLibraryGeneral.insertString(View.GENERE), licenseList);
         return res;
     }
 
@@ -243,7 +243,7 @@ public class ControllerResources {
      * Metodo per stampare a video le risorse del database
      */
     public  void controllerPrintSpecificResource(String type){
-        view.viewPrintSpecificResource(type);
+        View.viewPrintSpecificResource(type);
         db.printSpecificResource(type);
     }
 
@@ -278,14 +278,14 @@ public class ControllerResources {
                  */
                 if(copie[0] >= 1){
                     db.decrementCopyOrLicenze(barcode,0 );
-                    System.out.println(Constant.MG_AZIONE_SUCCESSO);
-                    if (copie[0] == 0) System.out.println(Constant.RISORSA_SCADUTA);
+                    View.stampaRichiestaSingola(View.MG_AZIONE_SUCCESSO);
+                    if (copie[0] == 0) System.out.println(View.RISORSA_SCADUTA);
                 }else{
                     //ovvero uguale a zero (perche\' <1)
-                    System.out.println(Constant.RISORSA_SCADUTA);
+                    View.stampaRichiestaSingola(View.RISORSA_SCADUTA);
                 }
-            } else System.out.println(Constant.RISORSA_IMPOSSIBILE_RIMUOVERE);
-        } else view.stampaRichiestaSingola(Constant.NON_ESISTE_RISORSA);
+            } else System.out.println(View.RISORSA_IMPOSSIBILE_RIMUOVERE);
+        } else View.stampaRichiestaSingola(View.NON_ESISTE_RISORSA);
     }
     public void initAllObject() {
         Integer[] borrowed_test = {0, 0};

@@ -1,15 +1,9 @@
 package main.java.model;
 
 public class Constant {
-    public final static String CORNICETTA3 ="∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞";
-    public final static String FINE_MENU =CORNICETTA3 + "\n\nArrivederci, grazie per aver usato i Servizi di prestito temporaneo\n\n"+ CORNICETTA3;
     public final static String AUTENTICAZIONE_SUCCESSO="Autenticazione avvenuta con successo, bentornato!";
     public final static String MG_AZIONE_SUCCESSO="L'azione appena completata e\' avvenuta con successo, grazie!";
-    public final static String MINORENNE= " Il sistema ha rilevato che sei minorenne, non puoi inscriverti.";
-    public final static String GRAZIE_PER_ISCRIZIONE=" Grazie per esserti Iscritto ai Servizi di Prestito Temporaneo.";
     public final static String SCADUTA_NON_RINNOVABILE = "Devi reistrarti nuovamente, la tua iscrizione e\' scaduta e non puo\' essere rinnovata.";
-    public final static String NOME="Inserisci NOME:";
-    public final static String COGNOME="Inserisci COGNOME:";
     public final static String USER_NAME="Inserisci USERNAME:";
     public final static String DATA_NASCITA="Inserisci DATA DI NASCITA:";
     public final static String PASSWORD ="Inserisci PASSWORD:";

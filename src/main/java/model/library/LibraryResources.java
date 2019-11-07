@@ -45,8 +45,6 @@ public class LibraryResources {
     /**
      * Metodo che permette di verificare se la risorsa &egrave; presente all'interno del database tramite
      * un metodo di quella classe.
-     * {@link #barcode}
-     *
      * @return true se la risorsa gia\' &egrave; presente nel Database, altrimenti false.
      */
     public boolean checkIfExist(int barcode) {
@@ -120,8 +118,6 @@ public class LibraryResources {
 
     /**
      * Metodo genera il codice del prestito richiesto dall'utente di una risorsa.
-     *
-     * @param barcode {@link #barcode}
      * @return codice prestito
      */
     public String generateId(String username, int barcode) {
