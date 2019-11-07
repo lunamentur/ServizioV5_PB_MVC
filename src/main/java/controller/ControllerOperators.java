@@ -7,6 +7,11 @@ import main.java.model.*;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * Classe Controller che si occupa della gestione dei metodi del model riguardanti User e Admin.
+ * @author Reda Kassame, Simona Ramazzotti
+ * @version 5
+ */
 public class ControllerOperators {
     private LocalDate birthDate;
     private  View view =new View();

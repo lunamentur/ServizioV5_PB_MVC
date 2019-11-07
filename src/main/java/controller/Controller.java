@@ -5,6 +5,11 @@ import main.java.model.library.LibraryResources;
 import main.java.view.ViewLibraryGeneral;
 import main.java.view.*;
 
+/**
+ * Classe Controller
+ * @author Reda Kassame, Simona Ramazzotti
+ * @version 5
+ */
 public class Controller {
     private View view;
     private Database database;
@@ -12,25 +17,19 @@ public class Controller {
     private ControllerResources cr;
     private LibraryOperators lo;
     private LibraryResources lr;
-    //private User user;
     private String username;
-    //private Admin admin;
     private static int vincolo= 3;
 
     /**
      * Creazione di variabili e oggetti utili per i metodi di controllo relativi all'User.
      */
-    private static long rangeYear=5;
-    private static long rangeDay=-10;
-    int choice1, choice2;
+    int  choice2;
     boolean end1, end2;
 
+
     /**
-     * inizializzazione delle licenze utente.
+     * Costruttore della classe
      */
-    private static Integer [] borrowed={0,0};
-
-
     public Controller() {
         view=new View();
         username= new String();
@@ -66,7 +65,7 @@ public class Controller {
         database.saveAllHash(View.FILE_PRESTITO);
         database.saveAllHash(View.FILE_RESOURCE);
 
-        System.out.println(Constant.FINE_MENU);
+        System.out.println(view.FINE_MENU);
     }
 
 
@@ -129,8 +128,8 @@ public class Controller {
                      * {@link Database#printSpecificResource(String)}
                      */
                     case 1:
-                        cr.controllerPrintSpecificResource(Constant.BOOK);
-                        cr.controllerPrintSpecificResource(Constant.FILM);
+                        cr.controllerPrintSpecificResource(view.BOOK);
+                        cr.controllerPrintSpecificResource(view.FILM);
                         break;
                     /**
                      * Aggiungere una risorsa all'elenco.
@@ -145,7 +144,7 @@ public class Controller {
                      * {@link Database#removeResource(int)}
                      */
                     case 3:
-                        view.stampaRichiestaSingola(View.BARCODE);
+                        view.stampaRichiestaSingola(view.BARCODE);
                         int number = ViewLibraryGeneral.readInt();
                         cr.removeResource(number);
                         break;
@@ -237,7 +236,7 @@ public class Controller {
                              */
                             int type= database.choiceTypeResource(barcode);
                             lo.createRequestPrestito(barcode,username);
-                        } else  System.out.println(Constant.NON_ESISTE_RISORSA);
+                        } else  System.out.println(view.NON_ESISTE_RISORSA);
 
                         break;
 
@@ -260,7 +259,7 @@ public class Controller {
                         if(database.userHavePrestito(username)){
                             String id=cr.checkInsertId(username);
                             cr.controllerProrogaPrestito(id);
-                        }else System.out.println(Constant.USER_NON_HA_PRESTITI);
+                        }else System.out.println(view.USER_NON_HA_PRESTITI);
                         break;
 
                     /**
@@ -283,8 +282,8 @@ public class Controller {
                             String id = cr.checkInsertId(username);
                             int temp = database.getPrestito(id).getBarcode();
                             database.removePrestito(temp, username, id);
-                            System.out.println(Constant.MG_AZIONE_SUCCESSO);
-                        }else System.out.println(Constant.USER_NON_HA_PRESTITI);
+                            System.out.println(view.MG_AZIONE_SUCCESSO);
+                        }else System.out.println(view.USER_NON_HA_PRESTITI);
 
                         break;
 
@@ -328,10 +327,10 @@ public class Controller {
                          */
 
                         if (co.registrationProcess()) {
-                            System.out.println(Constant.GRAZIE_PER_ISCRIZIONE);
+                            System.out.println(view.GRAZIE_PER_ISCRIZIONE);
 
                         } else {
-                            System.out.println(Constant.MINORENNE);
+                            System.out.println(view.MINORENNE);
                         }
                         break;
 
@@ -361,7 +360,7 @@ public class Controller {
                                 co.controllerRenewalRegistration(database.getUser(username));
                                 menuActionUser(user);
                             }
-                        } else System.out.println(View.ERRORE_LOGIN);
+                        } else System.out.println(view.ERRORE_LOGIN);
 
                         break;
 

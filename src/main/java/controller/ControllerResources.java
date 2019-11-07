@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 
+/**
+ * Classe Controller che si occupa della gestione dei metodi del model riguardanti le Risorse e prestiti.
+ * @author Reda Kassame, Simona Ramazzotti
+ * @version 5
+ */
 public class ControllerResources {
 
     private  View view =new View();
