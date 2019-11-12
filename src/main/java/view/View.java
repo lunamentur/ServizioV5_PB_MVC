@@ -8,9 +8,9 @@ package main.java.view;
  */
 public class View {
 
-    public final static String CORNICETTA = "*******************************";
-    public final static String CORNICETTA2 ="∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆";
-    public final static String CORNICETTA3 ="∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞";
+    public final static String CORNICETTA = "***********************************************************";
+    public final static String CORNICETTA2 ="∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆∆";
+    public final static String CORNICETTA3 ="∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞";
     public final static String FINE_MENU =CORNICETTA3 + "\n\nArrivederci, grazie per aver usato i Servizi di prestito temporaneo\n\n"+ CORNICETTA3;
     public final static String RICHIESTA="Quale opzione desideri svolgere? ";
     public final static String MG_ERRORE="\nRiprova, hai inserito un valore non valido";

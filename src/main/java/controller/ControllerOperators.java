@@ -1,11 +1,11 @@
 package main.java.controller;
 
+import main.java.model.library.LibraryControllerInterface;
 import main.java.model.library.LibraryOperators;
 import main.java.view.*;
 import main.java.model.*;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 /**
  * Classe Controller che si occupa della gestione dei metodi del model riguardanti User e Admin.
@@ -16,8 +16,11 @@ public class ControllerOperators {
     private LocalDate birthDate;
     private  View view =new View();
     private Database db;
-    private LibraryOperators lo = new LibraryOperators(db);
-    private ViewLibraryGeneral vlg = new ViewLibraryGeneral(); 
+    //private LibraryOperators lo = new LibraryOperators(db);
+    private ViewLibraryGeneral vlg = new ViewLibraryGeneral();
+    private LibraryControllerInterface library;
+
+
 
     /**
      * Creazione di variabili e oggetti utili per i metodi di controllo relativi all'User.
@@ -35,6 +38,7 @@ public class ControllerOperators {
      */
     public ControllerOperators(Database db){
         this.db = db;
+        this.library = new LibraryOperators(db);
     }
 
 
@@ -43,11 +47,11 @@ public class ControllerOperators {
      * @param user utente, fruitore.
      */
     public  void controllerRenewalRegistration(User user) {
-        if (lo.isRenewal(user)) {
+        if (library.isRenewal(user)) {
             view.viewRenewalRegistrazion();
             int choice = vlg.readInt();
             if (choice == 0) {
-                lo.renewalRegistration(user);
+                library.renewalRegistration(user);
             }
         }
     }
@@ -115,10 +119,8 @@ public class ControllerOperators {
         } while (!end);
     }
 
-
-    //questo? a cosa serve?
     public  void userExpired(User user) {
-        lo.userExpired(user);
+        library.userExpired(user);
     }
 
     /**
@@ -138,7 +140,7 @@ public class ControllerOperators {
                 month= vlg.readInt();
                 view.stampaRichiestaSingola(Constant.DAY);
                 day= vlg.readInt();
-                if(lo.trueDate(month,day)) {
+                if(library.trueDate(month,day)) {
                     birthDate= LocalDate.of(year,month,day);
                     end=true;
                 }
@@ -149,4 +151,5 @@ public class ControllerOperators {
         }
         return birthDate;
     }
+
 }

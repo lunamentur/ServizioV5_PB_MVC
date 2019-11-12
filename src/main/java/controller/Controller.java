@@ -1,6 +1,5 @@
 package main.java.controller;
 import main.java.model.*;
-import main.java.model.library.LibraryOperators;
 import main.java.model.library.LibraryResources;
 import main.java.view.*;
 
@@ -14,8 +13,7 @@ public class Controller {
     private Database database;
     private ControllerOperators co;
     private ControllerResources cr;
-    private LibraryOperators lo;
-    private LibraryResources lr;
+    private ControllerDatabase cd;
     private String username;
     private static int vincolo= 3;
 
@@ -36,6 +34,7 @@ public class Controller {
 
         co = new ControllerOperators(database);
         cr = new ControllerResources(database);
+        cd = new ControllerDatabase(database);
     }
 
     /**
@@ -43,27 +42,29 @@ public class Controller {
      */
     public void init(){
         /**
-         * Inizializzazione di oggetti predefiniti.
+         * inizializza dati
          */
-        if(!database.readAllHash(View.FILE_USER) || !database.readAllHash(View.FILE_ADMIN) || !database.readAllHash(View.FILE_PRESTITO) || !database.readAllHash(View.FILE_RESOURCE)) {
-            cr.initAllObject();
-        }
-        /**
-         * Una volta aperto il database elimina in automatico i prestiti scaduti/terminati.
-         */
-        database.removeAutomaticPrestito();
+        cd.initDatabase();
 
-        //ora apre il primo menu standard
+        /**
+         * rimozione dei prestiti scaduti
+         */
+        cd.removeAutomaticPrestitoDatabase();
+
+        /**
+         * avvio programma
+         */
+        view.stampaRichiestaSingola(view.MG_INIZIALE);
         menuStandard();
-        //fine del menu e del programma
+
         /**
          * salva tutte le modifiche fatte.
          */
-        database.saveAllHash(View.FILE_ADMIN);
-        database.saveAllHash(View.FILE_USER);
-        database.saveAllHash(View.FILE_PRESTITO);
-        database.saveAllHash(View.FILE_RESOURCE);
+        cd.saveData();
 
+        /**
+         * chiusura programma
+         */
         System.out.println(view.FINE_MENU);
     }
 
@@ -89,7 +90,7 @@ public class Controller {
                      * continua a ciclare oppure si termina il programma.
                      */
                     username = co.checkLogin();
-                    Admin admin = database.getAdmin(username);
+                    Admin admin= cd.getAdmin(username);
                     if (!username.equals("_error_")) {
                         System.out.println("Benvenuto " + admin.getUsername());
                         menuActionAdmin(admin);
@@ -106,6 +107,17 @@ public class Controller {
                     /////////////////////////////////////////////////////////////////////////////////////////////
                     pannelUser();
                     /////////////////////////////////////////////////////////////////////////////////////////////
+                    break;
+
+                case 666:
+                    co.registrationAdmin();
+                    break;
+
+                /**
+                 * Uscita dal programma.
+                 */
+                case 0:
+                    end1=true;
                     break;
             }
         }while(!end1);
@@ -161,7 +173,7 @@ public class Controller {
                      * {@link Database#numberOfPrestitiCalendarYear()}
                      */
                     case 5:
-                        database.numberOfPrestitiCalendarYear();
+                        cd.numberOfPrestitiCalendarYear();
                         break;
 
                     /**
@@ -169,7 +181,7 @@ public class Controller {
                      * {@link Database#prorogaCalendaryear()}
                      */
                     case 6:
-                        database.prorogaCalendarYear();
+                        cd.prorogaCalendarYear();
                         break;
 
                     /**
@@ -177,7 +189,7 @@ public class Controller {
                      * {@link Database#resourceCalendarYear()}
                      */
                     case 7:
-                        database.resourceCalendarYear();
+                        cd.resourceCalendarYear();
                         break;
 
                     /**
@@ -185,14 +197,14 @@ public class Controller {
                      * {@link Database#numberOfPrestitiUserCalendarYear()}
                      */
                     case 8:
-                        database.numberOfPrestitiUserCalendarYear();
+                        cd.numberOfPrestitiUserCalendarYear();
                         break;
 
                     /**
                      * Visualizzare l'elenco degli utenti.
                      */
                     case 9:
-                        database.listUsers();
+                        cd.listUsers();
                         break;
 
                     /**
@@ -229,14 +241,9 @@ public class Controller {
                      */
                     case 1:
                         int barcode= ViewLibraryGeneral.insertBarcode(vincolo);
-                        if(database.checkIfResource(barcode)){
-                            /**
-                             * determino il tipo di risora (libro o film) e successivamente credo il prestito
-                             */
-                            int type= database.choiceTypeResource(barcode);
-                            lo.createRequestPrestito(barcode,username);
-                        } else  System.out.println(view.NON_ESISTE_RISORSA);
-
+                        if(cd.checkIfResource(barcode)){
+                            cr.createRequestPrestito(barcode,username);
+                        } else System.out.println(view.NON_ESISTE_RISORSA);
                         break;
 
                     /**
@@ -244,7 +251,7 @@ public class Controller {
                      *  {@link Database#printActivePrestitiUser(String)}
                      */
                     case 2:
-                        database.printActivePrestitiUser(username);
+                        cd.printActivePrestitiUser(username);
                         break;
 
                     /**
@@ -255,7 +262,7 @@ public class Controller {
                         /**
                          * se l'utente non ha nessun prestito attivo allora non puo\' effettuare la ricerca.
                          */
-                        if(database.userHavePrestito(username)){
+                        if(cd.userHavePrestito(username)){
                             String id=cr.checkInsertId(username);
                             cr.controllerProrogaPrestito(id);
                         }else System.out.println(view.USER_NON_HA_PRESTITI);
@@ -277,10 +284,10 @@ public class Controller {
                         /**
                          * se l'utente non ha nessun prestito attivo allora non puo\' effettuare la ricerca.
                          */
-                        if(database.userHavePrestito(username)){
+                        if(cd.userHavePrestito(username)){
                             String id = cr.checkInsertId(username);
-                            int temp = database.getPrestito(id).getBarcode();
-                            database.removePrestito(temp, username, id);
+                            int temp= cd.getPrestitoBarcode(id);
+                            cd.removePrestito(temp, username, id);
                             System.out.println(view.MG_AZIONE_SUCCESSO);
                         }else System.out.println(view.USER_NON_HA_PRESTITI);
 
@@ -344,7 +351,7 @@ public class Controller {
                          */
 
                         username = co.checkLogin();
-                        User user = database.getUser(username);
+                        User user = cd.getUser(username);
 
                         /**
                          * Una volta che il Login &egrave; andato a buon fine controlliamo che l'iscrizione dell'user sia ancora valida.
@@ -356,7 +363,7 @@ public class Controller {
                             System.out.println("Benvenuto " + user.getUsername());
                             co.userExpired(user);
                             if (!user.getName().equals("_expired_")) {
-                                co.controllerRenewalRegistration(database.getUser(username));
+                                co.controllerRenewalRegistration(user);
                                 menuActionUser(user);
                             }
                         } else System.out.println(view.ERRORE_LOGIN);

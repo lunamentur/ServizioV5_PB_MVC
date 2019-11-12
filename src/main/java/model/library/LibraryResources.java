@@ -12,7 +12,7 @@ import java.util.Random;
  * @author Reda Kassame, Simona Ramazzotti
  * @version 5
  */
-public class LibraryResources {
+public class LibraryResources implements LibraryControllerInterface {
     public Database db;
     public LocalDate dataInizio, dataScadenza;
     private int giorniIntervalloProroga = 3;
@@ -41,6 +41,31 @@ public class LibraryResources {
      * METODI CONTROLLO RESOURCE
      */
 
+
+    @Override
+    public void renewalRegistration(User user) {
+
+    }
+
+    @Override
+    public boolean isRenewal(User user) {
+        return false;
+    }
+
+    @Override
+    public boolean isExpired(User user) {
+        return false;
+    }
+
+    @Override
+    public void userExpired(User user) {
+
+    }
+
+    @Override
+    public boolean trueDate(int month, int day) {
+        return false;
+    }
 
     /**
      * Metodo che permette di verificare se la risorsa &egrave; presente all'interno del database tramite
@@ -140,5 +165,15 @@ public class LibraryResources {
          * Indice in posizione 1 indica il numero di copie in prestito
          */
         return copie[copieinPrestito] < copie[copieRisorsa];
+    }
+
+    /**
+     * Metodo che controlla se l'user ha piu\' di 3 prestiti previsti per una tipologia, o categoria, di risorsa.
+     * @param user {@link User}
+     * @return true se non puo\' piu\' prendere in prestito altre risorse, false se invece ha ancora disponibili dei prestiti da poter fare.
+     */
+    public boolean checkBorrowed(User user, int number){
+        Integer [] value= user.getBorrowed();
+        return value[number] >= 3;
     }
 }

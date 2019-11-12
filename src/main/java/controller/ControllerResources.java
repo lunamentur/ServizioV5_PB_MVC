@@ -1,5 +1,6 @@
 package main.java.controller;
 import main.java.model.*;
+import main.java.model.library.LibraryControllerInterface;
 import main.java.model.library.LibraryResources;
 import main.java.view.*;
 
@@ -28,7 +29,7 @@ public class ControllerResources {
      */
     private  String string;
     private Database db;
-    private LibraryResources lr;
+    private LibraryControllerInterface lr;
     private  int barcode;
     private  int vincolo=3;
     private  Integer [] licenseList= {0,0};//licenze con due componenti.
@@ -37,7 +38,6 @@ public class ControllerResources {
      * variabili che corrispondono agli indici della lista di licenze.
      * {@link Resource}
      */
-    private  int copieRisorsa = 0;
     private  int copieinPrestito = 1;
 
     /**
@@ -48,6 +48,8 @@ public class ControllerResources {
         this.db = db;
         lr = new LibraryResources(db);
     }
+
+
     /**
      * Metodo per creare una risorsa e salvarla nel db.
      * Se la risorsa &egrave; gia\' presente nel database allora si incrementa il numero di copie disponibili al prestito.
@@ -240,6 +242,30 @@ public class ControllerResources {
     }
 
     /**
+     * Metodo che raccoglie tutti i metodi per richiedere e verificare la creazione di un prestito.
+     */
+    public  void createRequestPrestito(int barcode, String username){
+        /**
+         * controllo il tipo della risorsa cercata.
+         * controllo che l'utente possa effettivamente prendere in prestito una risorsa.
+         */
+        int bookOrFilm=0;
+        bookOrFilm = db.choiceTypeResource(barcode);
+        if (!lr.checkBorrowed(db.getUser(username), bookOrFilm)){
+            /**
+             * genero il codice del prestito.
+             */
+            System.out.println(db.getResource(barcode).toString());
+            String codePrestito = lr.generateId(username,barcode);
+            /**
+             * creo il prestito e lo salvo nel database, aumentando di uno il numero di licenze dell'utente.
+             * Avendo già identivicato prima il tipo di risorsa ne modificando quindi il numero associato.
+             */
+            createPrestito(codePrestito, username, barcode, bookOrFilm);
+        } else System.out.println(view.FINITE_LICENZE_PRESTITO_USER);
+    }
+
+    /**
      * Metodo per stampare a video le risorse del database
      */
     public  void controllerPrintSpecificResource(String type){
@@ -287,57 +313,9 @@ public class ControllerResources {
             } else System.out.println(View.RISORSA_IMPOSSIBILE_RIMUOVERE);
         } else View.stampaRichiestaSingola(View.NON_ESISTE_RISORSA);
     }
-    public void initAllObject() {
-        Integer[] borrowed_test = {0, 0};
-        Integer[] license_book1 = {3, 2};
-        Integer[] license_book2 = {3, 1};
-        Integer[] borrowed1 = {2, 0};
-        Integer[] license_film1 = {3, 1};
-        Integer[] license_film2 = {3, 0};
-        Integer[] borrowed2 = {1, 1};
-        List<String> langues_test = new ArrayList<String>();
-        List<String> author_test = new ArrayList<String>();
-        langues_test.add("inglese");
-        langues_test.add("spagnolo");
-        author_test.add("Gino");
-        author_test.add("Pino");
-        //genero utenti
-        Admin admin_reda = new Admin("admin_reda", "password");
-        Admin admin_simona = new Admin("admin_simona", "password123");
-        db.getAdminList().put(admin_reda.getUsername(), admin_reda);
-        db.getAdminList().put(admin_simona.getUsername(), admin_simona);
 
-        //genero utenti
-        User user1 = new User("test", "test", "test1", "test1", LocalDate.of(1996, 01, 01), LocalDate.of(2019, 1, 1), borrowed1);
-        User user3 = new User("test", "test", "test3", "test3", LocalDate.of(1996, 01, 01), LocalDate.of(2018, 1, 1), borrowed2);
-        db.getUserList().put(user1.getUsername(), user1);
-        db.getUserList().put(user3.getUsername(), user3);
-
-        User userRinnovo = new User("test", "test", "rinnovo", "rinnovo", LocalDate.of(1996, 01, 01), LocalDate.of(2014, 04, 18), borrowed_test);
-        db.getUserList().put(userRinnovo.getUsername(), userRinnovo);
-
-        User userScaduto = new User("test", "test", "scaduto", "scaduto", LocalDate.of(1996, 01, 01), LocalDate.of(2012, 02, 03), borrowed_test);
-        db.getUserList().put(userScaduto.getUsername(), userScaduto);
-
-        //genero libri
-        Book book1 = new Book(111, Constant.BOOK, "libro di test 1", langues_test, author_test, 2000, "Romanzo", license_book1, 220, "Giunti");
-        Book book2 = new Book(222, Constant.BOOK, "libro di test 2", langues_test, author_test, 2000, "Romanzo", license_book2, 220, "Giunti");
-        db.getResourceList().put(book1.getBarcode(), book1);
-        db.getResourceList().put(book2.getBarcode(), book2);
-
-        //genero film
-        Film film1 = new Film(333, Constant.FILM, "Film 1", author_test, langues_test, 2001, "horror", license_film1, 18, 125);
-        Film film2 = new Film(444, Constant.FILM, "Film 2", author_test, langues_test, 2003, "horror", license_film2, 18, 139);
-        db.getResourceList().put(film2.getBarcode(), film2);
-        db.getResourceList().put(film1.getBarcode(), film1);
-
-        //genero prestiti
-        Prestito pScaduto = new Prestito(lr.generateId(user1.getUsername(), book1.getBarcode()), user1.getUsername(), book1.getBarcode(), LocalDate.of(2019, 2, 3), LocalDate.of(2019, 3, 3));
-        Prestito p4 = new Prestito(lr.generateId(user1.getUsername(), book2.getBarcode()), user1.getUsername(), book2.getBarcode(), LocalDate.of(2019, 4, 1), LocalDate.of(2019, 5, 1));
-        Prestito p5 = new Prestito(lr.generateId(user3.getUsername(), book1.getBarcode()), user3.getUsername(), book1.getBarcode(), LocalDate.of(2019, 3, 31), LocalDate.of(2019, 4, 30));
-        Prestito p3 = new Prestito(lr.generateId(user3.getUsername(), film1.getBarcode()), user3.getUsername(), film1.getBarcode(), LocalDate.of(2019, 4, 2), LocalDate.of(2019, 5, 2));
-        db.getPrestitoList().put(pScaduto.getCodePrestito(), pScaduto);
-        db.getPrestitoList().put(p3.getCodePrestito(), p3);
+    public String generateIdController(String username, int barcode){
+        return lr.generateId(username,barcode);
     }
 
 }
